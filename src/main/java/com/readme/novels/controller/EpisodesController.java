@@ -1,15 +1,15 @@
-package com.readme.novels.adapter.controller;
+package com.readme.novels.controller;
 
-import com.readme.novels.domain.model.Episodes;
+import com.readme.novels.model.Episodes;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/episodes-service")
+@RequestMapping("/novels-service")
 public class EpisodesController {
 
-    @GetMapping
+    @GetMapping("/episodes")
     public Episodes getEpisode() {
         return Episodes.builder()
             .novelId(1L)

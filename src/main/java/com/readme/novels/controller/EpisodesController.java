@@ -23,8 +23,8 @@ public class EpisodesController {
     public Episodes getEpisode() {
         return Episodes.builder()
             .novelId(1L)
-            .title("hello_1")
-            .content("hello!")
+            .title("나 혼자 레벨업")
+            .content("나 혼자 레벨업 소설 소개 입니다")
             .views(100L)
             .free(Boolean.TRUE)
             .build();

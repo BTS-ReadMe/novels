@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AwsS3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    @Value("${s3Path}")
+    private String s3Path;
 
     private final AmazonS3 amazonS3;
 
@@ -38,7 +42,11 @@ public class AwsS3Service {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패 했습니다");
         }
 
-        return fileName;
+        String returnFileName = s3Path+fileName;
+
+        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ {}", returnFileName);
+
+        return returnFileName;
     }
 
     // 파일명 난수화 (이전에 올린 이미지 또 올릴수도)

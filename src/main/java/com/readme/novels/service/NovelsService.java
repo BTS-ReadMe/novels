@@ -7,4 +7,5 @@ public interface NovelsService {
 
     void addNovels(NovelsDto novelsDto);
 
+    void updateNovels(NovelsDto novelsDto);
 }

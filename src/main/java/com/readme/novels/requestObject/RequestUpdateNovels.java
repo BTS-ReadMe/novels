@@ -1,4 +1,4 @@
-package com.readme.novels.dto;
+package com.readme.novels.requestObject;
 
 import com.readme.novels.model.Novels.Genre;
 import com.readme.novels.model.Novels.Grade;
@@ -7,16 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Builder
-@Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class NovelsDto {
+@NoArgsConstructor
+public class RequestUpdateNovels {
 
     private Long id;
     private String title;
@@ -29,7 +27,4 @@ public class NovelsDto {
     private String authorComment;
     private Grade grade;
     private Genre genre;
-    private Date createDate;
-    private Date updateDate;
-
 }

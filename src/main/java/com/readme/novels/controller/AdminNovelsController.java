@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,16 +43,20 @@ public class AdminNovelsController {
 
     }
 
-    @PutMapping("/{novels_id}")
-    public void updateNovels(@RequestBody RequestUpdateNovels requestUpdateNovels, @PathVariable Long novels_id){
+    @PutMapping("/{id}")
+    public void updateNovels(@RequestBody RequestUpdateNovels requestUpdateNovels, @PathVariable Long id){
         ModelMapper mapper = new ModelMapper();
         NovelsDto novelsDto = mapper.map(requestUpdateNovels, NovelsDto.class);
-        novelsDto.setId(novels_id);
+        novelsDto.setId(id);
 
         log.info(novelsDto.toString());
 
         novelsService.updateNovels(novelsDto);
 
+    }
+
+    @DeleteMapping("/{id}")   public void deleteNovels(@PathVariable Long id) {
+        novelsService.deleteNovels(id);
     }
 
 }

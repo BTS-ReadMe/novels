@@ -66,4 +66,11 @@ public class NovelsServiceImpl implements NovelsService {
         novelsRepository.save(novels);
 
     }
+
+    @Override
+    public void deleteNovels(Long id) {
+        novelsRepository.findById(id).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설 입니다."));
+        novelsRepository.deleteById(id);
+    }
 }

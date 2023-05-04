@@ -10,4 +10,6 @@ public interface NovelsService {
     void updateNovels(NovelsDto novelsDto);
 
     void deleteNovels(Long id);
+
+    NovelsDto getNovelsById(Long id);
 }

@@ -2,10 +2,9 @@ package com.readme.novels.service;
 
 import com.readme.novels.dto.NovelsDto;
 import com.readme.novels.model.Novels;
-import com.readme.novels.model.Novels.Genre;
-import com.readme.novels.model.Novels.Grade;
 import com.readme.novels.repository.NovelsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NovelsServiceImpl implements NovelsService {
 
     private final NovelsRepository novelsRepository;
@@ -72,5 +72,33 @@ public class NovelsServiceImpl implements NovelsService {
         novelsRepository.findById(id).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설 입니다."));
         novelsRepository.deleteById(id);
+    }
+
+    @Override
+    public NovelsDto getNovelsById(Long id) {
+        Novels novels = novelsRepository.findById(id)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
+
+        NovelsDto novelsDto = NovelsDto.builder()
+            .id(novels.getId())
+            .serializationDay(novels.getSerializationDay())
+            .serializationStatus(novels.getSerializationStatus())
+            .grade(novels.getGrade())
+            .genre(novels.getGenre())
+            .author(novels.getAuthor())
+            .authorComment(novels.getAuthorComment())
+            .createDate(novels.getCreateDate())
+            .updateDate(novels.getUpdateDate())
+            .description(novels.getDescription())
+            .startDate(novels.getStartDate())
+            .thumbnail(novels.getThumbnail())
+            .title(novels.getTitle())
+            .startDate(novels.getStartDate())
+            .build();
+
+        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ {} ", novelsDto);
+
+        return novelsDto;
     }
 }

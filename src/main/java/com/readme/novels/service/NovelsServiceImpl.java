@@ -1,8 +1,13 @@
 package com.readme.novels.service;
 
 import com.readme.novels.dto.NovelsDto;
+import com.readme.novels.dto.PaginationDto;
 import com.readme.novels.model.Novels;
+import com.readme.novels.repository.INovelsRepository;
+import com.readme.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.repository.NovelsRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 public class NovelsServiceImpl implements NovelsService {
 
+    private final INovelsRepository iNovelsRepository;
     private final NovelsRepository novelsRepository;
 
     @Override
@@ -37,7 +43,7 @@ public class NovelsServiceImpl implements NovelsService {
             .description(novelsDto.getDescription())
             .build();
 
-        novelsRepository.save(novels);
+        iNovelsRepository.save(novels);
 
 
     }
@@ -46,7 +52,7 @@ public class NovelsServiceImpl implements NovelsService {
     @Transactional
     public void updateNovels(NovelsDto novelsDto) {
 
-        novelsRepository.findById(novelsDto.getId()).orElseThrow(
+        iNovelsRepository.findById(novelsDto.getId()).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
         Novels novels = Novels.builder()
@@ -63,20 +69,20 @@ public class NovelsServiceImpl implements NovelsService {
             .description(novelsDto.getDescription())
             .build();
 
-        novelsRepository.save(novels);
+        iNovelsRepository.save(novels);
 
     }
 
     @Override
     public void deleteNovels(Long id) {
-        novelsRepository.findById(id).orElseThrow(
+        iNovelsRepository.findById(id).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설 입니다."));
-        novelsRepository.deleteById(id);
+        iNovelsRepository.deleteById(id);
     }
 
     @Override
     public NovelsDto getNovelsById(Long id) {
-        Novels novels = novelsRepository.findById(id)
+        Novels novels = iNovelsRepository.findById(id)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
@@ -97,8 +103,39 @@ public class NovelsServiceImpl implements NovelsService {
             .startDate(novels.getStartDate())
             .build();
 
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ {} ", novelsDto);
-
         return novelsDto;
+    }
+
+    @Override
+    public List<NovelsDto> getNovels(NovelsSearchParamDto novelsSearchParamDto) {
+
+        List<Novels> novelsList = novelsRepository.getNovels(novelsSearchParamDto);
+
+        List<NovelsDto> novelsDtoList = new ArrayList<>();
+
+        novelsList.forEach(item -> {
+            NovelsDto novelsDto = NovelsDto.builder()
+                .id(item.getId())
+                .title(item.getTitle())
+                .author(item.getAuthor())
+                .description(item.getDescription())
+                .startDate(item.getStartDate())
+                .serializationDay(item.getSerializationDay())
+                .serializationStatus(item.getSerializationStatus())
+                .thumbnail(item.getThumbnail())
+                .genre(item.getGenre())
+                .grade(item.getGrade())
+                .authorComment(item.getAuthorComment())
+                .build();
+
+            novelsDtoList.add(novelsDto);
+        });
+
+        return novelsDtoList;
+    }
+
+    @Override
+    public PaginationDto getPagination(NovelsSearchParamDto novelsSearchParamDto) {
+        return novelsRepository.getPagination(novelsSearchParamDto);
     }
 }

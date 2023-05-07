@@ -75,9 +75,22 @@ public class NovelsServiceImpl implements NovelsService {
 
     @Override
     public void deleteNovels(Long id) {
-        iNovelsRepository.findById(id).orElseThrow(
+        Novels novels = iNovelsRepository.findById(id).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설 입니다."));
-        iNovelsRepository.deleteById(id);
+
+        Novels updateNovels = Novels.builder()
+            .id(novels.getId())
+            .title(novels.getTitle())
+            .author(novels.getAuthor())
+            .authorComment(novels.getAuthorComment())
+            .description(novels.getDescription())
+            .genre(novels.getGenre())
+            .grade(novels.getGrade())
+            .serializationDay(novels.getSerializationDay())
+            .serializationStatus("삭제")
+            .startDate(novels.getStartDate())
+            .thumbnail(novels.getThumbnail())
+            .build();
     }
 
     @Override

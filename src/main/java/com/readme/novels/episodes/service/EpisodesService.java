@@ -6,4 +6,6 @@ public interface EpisodesService {
     void addEpisodes(EpisodesDto episodesDto);
 
     void updateEpisodes(Long id, EpisodesDto episodesDto);
+
+    void deleteEpisodes(Long id);
 }

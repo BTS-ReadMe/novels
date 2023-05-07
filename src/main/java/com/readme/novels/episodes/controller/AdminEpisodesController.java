@@ -7,6 +7,7 @@ import com.readme.novels.episodes.service.EpisodesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,8 @@ public class AdminEpisodesController {
     }
 
     @PutMapping("/{id}")
-    public void updateEpisodes(@RequestBody RequestUpdateEpisodes requestUpdateEpisodes, @PathVariable Long id) {
+    public void updateEpisodes(@RequestBody RequestUpdateEpisodes requestUpdateEpisodes,
+        @PathVariable Long id) {
         ModelMapper mapper = new ModelMapper();
         EpisodesDto episodesDto = mapper.map(requestUpdateEpisodes, EpisodesDto.class);
 
@@ -40,7 +42,9 @@ public class AdminEpisodesController {
 
     }
 
-
-
+    @DeleteMapping("/{id}")
+    public void deleteEpisodes(@PathVariable Long id){
+        episodesService.deleteEpisodes(id);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.readme.novels.episodes.model;
 
+import com.readme.novels.utils.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Episodes {
+public class Episodes extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +28,5 @@ public class Episodes {
     private Long views;
     private Boolean free;
     private LocalDateTime registration;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
     private String status;
 }

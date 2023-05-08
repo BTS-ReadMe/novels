@@ -151,4 +151,49 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         return episodesPageDto;
     }
+
+    @Override
+    public EpisodesDto getEpisodesByUser(Long id) {
+
+        Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+        });
+        
+        // 조회수 1증가
+        plusViewsCount(id);
+
+        EpisodesDto episodesDto = EpisodesDto.builder()
+            .id(episodes.getId())
+            .title(episodes.getTitle())
+            .content(episodes.getContent())
+            .registration(episodes.getRegistration())
+            .free(episodes.getFree())
+            .status(episodes.getStatus())
+            .novelsId(episodes.getNovelsId())
+            .views(episodes.getViews())
+            .build();
+
+        return episodesDto;
+    }
+
+    @Override
+    public void plusViewsCount(Long id) {
+        Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+        });
+
+        Episodes updateEpisodes = Episodes.builder()
+            .title(episodes.getTitle())
+            .views(episodes.getViews()+1)
+            .content(episodes.getContent())
+            .registration(episodes.getRegistration())
+            .free(episodes.getFree())
+            .status(episodes.getStatus())
+            .novelsId(episodes.getNovelsId())
+            .id(episodes.getId())
+            .build();
+
+        episodesRepository.save(updateEpisodes);
+
+    }
 }

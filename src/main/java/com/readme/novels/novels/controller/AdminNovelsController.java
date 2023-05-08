@@ -5,7 +5,7 @@ import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.requestObject.RequestAddNovels;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.requestObject.RequestUpdateNovels;
-import com.readme.novels.novels.responseObject.Response;
+import com.readme.novels.utils.CommonResponse;
 import com.readme.novels.novels.responseObject.ResponseNovels;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination.Pagination;
@@ -69,11 +69,11 @@ public class AdminNovelsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getNovelsOne(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse> getNovelsOne(@PathVariable Long id) {
 
         NovelsDto novelsDto = novelsService.getNovelsById(id);
 
-        return ResponseEntity.ok().body(new Response(ResponseNovels.builder()
+        return ResponseEntity.ok().body(new CommonResponse(ResponseNovels.builder()
             .id(novelsDto.getId())
             .title(novelsDto.getTitle())
             .author(novelsDto.getAuthor())
@@ -89,7 +89,7 @@ public class AdminNovelsController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseNovelsPagination> getNovelsAll(
+    public ResponseEntity<CommonResponse> getNovelsAll(
         @RequestParam(required = false) String author,
         @RequestParam(required = false) String title,
         @RequestParam(required = false) Integer page) {
@@ -105,27 +105,28 @@ public class AdminNovelsController {
         PaginationDto paginationDto = novelsService.getPagination(novelsSearchParamDto);
 
         return ResponseEntity.ok(
-            new ResponseNovelsPagination(novelsDtoList.stream().map(novelsDto -> ResponseNovels.builder()
-                .id(novelsDto.getId())
-                .title(novelsDto.getTitle())
-                .author(novelsDto.getAuthor())
-                .description(novelsDto.getDescription())
-                .startDate(novelsDto.getStartDate())
-                .serializationDay(novelsDto.getSerializationDay())
-                .serializationStatus(novelsDto.getSerializationStatus())
-                .thumbnail(novelsDto.getThumbnail())
-                .genre(novelsDto.getGenre())
-                .grade(novelsDto.getGrade())
-                .authorComment(novelsDto.getAuthorComment())
-                .build()),
-                Pagination.builder()
+            new CommonResponse(ResponseNovelsPagination.builder()
+                .contents(novelsDtoList.stream().map(novelsDto -> ResponseNovels.builder()
+                    .id(novelsDto.getId())
+                    .title(novelsDto.getTitle())
+                    .author(novelsDto.getAuthor())
+                    .description(novelsDto.getDescription())
+                    .startDate(novelsDto.getStartDate())
+                    .serializationDay(novelsDto.getSerializationDay())
+                    .serializationStatus(novelsDto.getSerializationStatus())
+                    .thumbnail(novelsDto.getThumbnail())
+                    .genre(novelsDto.getGenre())
+                    .grade(novelsDto.getGrade())
+                    .authorComment(novelsDto.getAuthorComment())
+                    .build()))
+                .pagination(Pagination.builder()
                     .page(paginationDto.getPage())
                     .size(paginationDto.getSize())
                     .totalElements(paginationDto.getTotalElements())
                     .totalPage(paginationDto.getTotalPage())
                     .build()
-            ));
-    }
-
+                )
+                .build()));
+    };
 
 }

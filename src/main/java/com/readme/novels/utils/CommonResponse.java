@@ -1,4 +1,4 @@
-package com.readme.novels.novels.responseObject;
+package com.readme.novels.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class CommonResponse {
 
     private Object data;
 

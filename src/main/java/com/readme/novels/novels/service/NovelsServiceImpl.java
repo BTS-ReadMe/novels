@@ -151,4 +151,7 @@ public class NovelsServiceImpl implements NovelsService {
     public PaginationDto getPagination(NovelsSearchParamDto novelsSearchParamDto) {
         return novelsRepository.getPagination(novelsSearchParamDto);
     }
+
+
+
 }

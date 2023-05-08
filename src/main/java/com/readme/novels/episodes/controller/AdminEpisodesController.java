@@ -4,9 +4,11 @@ import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.service.EpisodesService;
+import com.readme.novels.utils.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +47,14 @@ public class AdminEpisodesController {
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id){
         episodesService.deleteEpisodes(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse> getEpisodes() {
+
+
+
+        return null;
     }
 
 }

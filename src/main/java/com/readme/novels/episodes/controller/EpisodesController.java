@@ -19,7 +19,7 @@ public class EpisodesController {
     private final EpisodesService episodesService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getEpisodes(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<ResponseEpisodesUser>> getEpisodes(@PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesByUser(id);
 

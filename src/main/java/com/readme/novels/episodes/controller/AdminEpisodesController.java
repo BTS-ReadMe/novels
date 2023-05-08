@@ -6,6 +6,7 @@ import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesByNovels;
+import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
@@ -59,7 +60,7 @@ public class AdminEpisodesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getEpisodesById(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<ResponseEpisodes>> getEpisodesById(@PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesById(id);
 
@@ -76,7 +77,7 @@ public class AdminEpisodesController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getEpisodesByNovels(@RequestParam Long novelId,
+    public ResponseEntity<CommonResponse<ResponseEpisodesPagination>> getEpisodesByNovels(@RequestParam Long novelId,
         @PageableDefault(size = 10) Pageable pageable) {
 
         EpisodesPageDto episodesPageDto = episodesService.getEpisodesByNovelsId(novelId, pageable);

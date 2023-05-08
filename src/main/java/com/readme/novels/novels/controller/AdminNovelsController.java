@@ -69,7 +69,7 @@ public class AdminNovelsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getNovelsOne(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<ResponseNovels>> getNovelsOne(@PathVariable Long id) {
 
         NovelsDto novelsDto = novelsService.getNovelsById(id);
 
@@ -89,7 +89,7 @@ public class AdminNovelsController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getNovelsAll(
+    public ResponseEntity<CommonResponse<ResponseNovelsPagination>> getNovelsAll(
         @RequestParam(required = false) String author,
         @RequestParam(required = false) String title,
         @RequestParam(required = false) Integer page) {

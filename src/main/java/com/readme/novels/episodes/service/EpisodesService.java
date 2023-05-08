@@ -8,4 +8,6 @@ public interface EpisodesService {
     void updateEpisodes(Long id, EpisodesDto episodesDto);
 
     void deleteEpisodes(Long id);
+
+    EpisodesDto getEpisodesById(Long id);
 }

@@ -3,6 +3,7 @@ package com.readme.novels.episodes.controller;
 import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
+import com.readme.novels.episodes.responseObject.ResponseEpisodes;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.utils.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +51,20 @@ public class AdminEpisodesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getEpisodes() {
+    public ResponseEntity<CommonResponse> getEpisodes(@PathVariable Long id) {
 
+        EpisodesDto episodesDto = episodesService.getEpisodesById(id);
 
-
-        return null;
+        return ResponseEntity.ok(new CommonResponse(
+            ResponseEpisodes.builder()
+                .id(episodesDto.getId())
+                .title(episodesDto.getTitle())
+                .content(episodesDto.getContent())
+                .registration(episodesDto.getRegistration())
+                .free(episodesDto.getFree())
+                .status(episodesDto.getStatus())
+                .build()
+        ));
     }
 
 }

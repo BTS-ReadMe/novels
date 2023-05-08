@@ -78,4 +78,27 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         episodesRepository.save(deleteEpisode);
     }
+
+    @Override
+    public EpisodesDto getEpisodesById(Long id) {
+
+        Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+        });
+
+        EpisodesDto episodesDto = EpisodesDto.builder()
+            .id(episodes.getId())
+            .content(episodes.getContent())
+            .free(episodes.getFree())
+            .createDate(episodes.getCreateDate())
+            .novelsId(episodes.getNovelsId())
+            .registration(episodes.getRegistration())
+            .status(episodes.getStatus())
+            .title(episodes.getTitle())
+            .views(episodes.getViews())
+            .updateDate(episodes.getUpdateDate())
+            .build();
+
+        return episodesDto;
+    }
 }

@@ -1,14 +1,21 @@
 package com.readme.novels.episodes.controller;
 
 import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
+import com.readme.novels.episodes.responseObject.ResponseEpisodesByNovels;
+import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.episodes.service.EpisodesService;
+import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
 import com.readme.novels.utils.CommonResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,12 +54,12 @@ public class AdminEpisodesController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEpisodes(@PathVariable Long id){
+    public void deleteEpisodes(@PathVariable Long id) {
         episodesService.deleteEpisodes(id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse> getEpisodes(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse> getEpisodesById(@PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesById(id);
 
@@ -65,6 +73,31 @@ public class AdminEpisodesController {
                 .status(episodesDto.getStatus())
                 .build()
         ));
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse> getEpisodesByNovels(@RequestParam Long novelId,
+        @PageableDefault(size = 10) Pageable pageable) {
+
+        EpisodesPageDto episodesPageDto = episodesService.getEpisodesByNovelsId(novelId, pageable);
+
+        return ResponseEntity.ok(
+            new CommonResponse(
+                ResponseNovelsPagination.builder()
+                    .contents(episodesPageDto.getContents().stream().map(episodesDto ->
+                        ResponseEpisodesByNovels.builder()
+                            .id(episodesDto.getId())
+                            .title(episodesDto.getTitle())
+                            .registration(episodesDto.getRegistration())
+                            .free(episodesDto.getFree())
+                            .build()
+                    ))
+                    .pagination(
+                        episodesPageDto.getPagination()
+                    )
+                    .build()
+            )
+        );
     }
 
 }

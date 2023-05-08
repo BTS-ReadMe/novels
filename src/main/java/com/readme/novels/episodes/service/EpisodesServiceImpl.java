@@ -1,12 +1,19 @@
 package com.readme.novels.episodes.service;
 
 import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodesRepository;
+import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -14,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EpisodesServiceImpl implements EpisodesService {
 
     private final EpisodesRepository episodesRepository;
@@ -100,5 +108,47 @@ public class EpisodesServiceImpl implements EpisodesService {
             .build();
 
         return episodesDto;
+    }
+
+    @Override
+    public EpisodesPageDto getEpisodesByNovelsId(Long novelId, Pageable pageable) {
+
+        iNovelsRepository.findById(novelId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다.");
+        });
+
+        Page<Episodes> episodesList
+            = episodesRepository.findByNovelsIdOrderByCreateDateDesc(novelId, pageable);
+
+        List<EpisodesDto> episodesDtoList = new ArrayList<>();
+
+        Pagination pagination = Pagination.builder()
+            .page(episodesList.getNumber())
+            .size(episodesList.getSize())
+            .totalElements(episodesList.getTotalElements())
+            .totalPage(episodesList.getTotalPages())
+            .build();
+
+        episodesList.forEach(episodes -> {
+            EpisodesDto episodesDto = EpisodesDto.builder()
+                .id(episodes.getId())
+                .title(episodes.getTitle())
+                .registration(episodes.getRegistration())
+                .free(episodes.getFree())
+                .novelsId(episodes.getNovelsId())
+                .createDate(episodes.getCreateDate())
+                .views(episodes.getViews())
+                .updateDate(episodes.getUpdateDate())
+                .status(episodes.getStatus())
+                .build();
+            episodesDtoList.add(episodesDto);
+        });
+
+        EpisodesPageDto episodesPageDto = EpisodesPageDto.builder()
+            .contents(episodesDtoList)
+            .pagination(pagination)
+            .build();
+
+        return episodesPageDto;
     }
 }

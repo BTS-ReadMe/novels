@@ -20,5 +20,7 @@ public class ResponseEpisodes {
     private LocalDateTime registration;
     private boolean free;
     private String status;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
 }

@@ -72,6 +72,8 @@ public class AdminEpisodesController {
                 .registration(episodesDto.getRegistration())
                 .free(episodesDto.getFree())
                 .status(episodesDto.getStatus())
+                .createDate(episodesDto.getCreateDate())
+                .updateDate(episodesDto.getUpdateDate())
                 .build()
         ));
     }

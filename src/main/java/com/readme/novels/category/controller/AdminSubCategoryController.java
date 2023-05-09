@@ -3,6 +3,7 @@ package com.readme.novels.category.controller;
 import com.readme.novels.category.dto.SubCategoryDto;
 import com.readme.novels.category.requestObject.RequestAddSubCategory;
 import com.readme.novels.category.service.SubCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ public class AdminSubCategoryController {
 
     private final SubCategoryService subCategoryService;
 
+    @Operation(summary = "서브 카테고리 등록", description = "서브 카테고리 등록", tags = {"Admin 카테고리"})
     @PostMapping
     public void addSubCategory(@RequestBody RequestAddSubCategory requestAddSubCategory) {
         ModelMapper mapper = new ModelMapper();

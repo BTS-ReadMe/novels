@@ -3,7 +3,8 @@ package com.readme.novels.category.controller;
 import com.readme.novels.category.dto.MainCategoryDto;
 import com.readme.novels.category.responseObject.ResponseMainCategory;
 import com.readme.novels.category.service.MainCategoryService;
-import com.readme.novels.utils.CommonResponse;
+import com.readme.novels.commonResponseObject.CommonDataResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,14 @@ public class MainCategoryController {
 
     private final MainCategoryService mainCategoryService;
 
+    @Operation(summary = "메인 카테고리 조회", description = "메인 카테고리 조회", tags = {"카테고리"})
     @GetMapping
-    public ResponseEntity<CommonResponse<ResponseMainCategory>> getMainCategory() {
+    public ResponseEntity<CommonDataResponse<ResponseMainCategory>> getMainCategory() {
 
         List<MainCategoryDto> mainCategoryDtoList = mainCategoryService.getMainCategory();
 
         return ResponseEntity.ok(
-            new CommonResponse(
+            new CommonDataResponse(
                 mainCategoryDtoList.stream().map(mainCategoryDto -> ResponseMainCategory.builder()
                     .id(mainCategoryDto.getId())
                     .title(mainCategoryDto.getTitle())

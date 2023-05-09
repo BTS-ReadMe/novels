@@ -7,11 +7,10 @@ import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesByNovels;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination;
-import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
-import com.readme.novels.utils.CommonResponse;
-import java.util.List;
+import com.readme.novels.commonResponseObject.CommonDataResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -36,6 +35,7 @@ public class AdminEpisodesController {
 
     private final EpisodesService episodesService;
 
+    @Operation(summary = "에피소드 추가", description = "에피소드 추가", tags = {"Admin 에피소드"})
     @PostMapping
     public void addEpisodes(@RequestBody RequestAddEpisodes requestAddEpisodes) {
         ModelMapper mapper = new ModelMapper();
@@ -44,6 +44,7 @@ public class AdminEpisodesController {
         episodesService.addEpisodes(episodesDto);
     }
 
+    @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {"Admin 에피소드"})
     @PutMapping("/{id}")
     public void updateEpisodes(@RequestBody RequestUpdateEpisodes requestUpdateEpisodes,
         @PathVariable Long id) {
@@ -54,17 +55,19 @@ public class AdminEpisodesController {
 
     }
 
+    @Operation(summary = "에피소드 삭제", description = "에피소드 삭제, soft delete 삭제", tags = {"Admin 에피소드"})
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
         episodesService.deleteEpisodes(id);
     }
 
+    @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {"Admin 에피소드"})
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ResponseEpisodes>> getEpisodesById(@PathVariable Long id) {
+    public ResponseEntity<CommonDataResponse<ResponseEpisodes>> getEpisodesById(@PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesById(id);
 
-        return ResponseEntity.ok(new CommonResponse(
+        return ResponseEntity.ok(new CommonDataResponse(
             ResponseEpisodes.builder()
                 .id(episodesDto.getId())
                 .title(episodesDto.getTitle())
@@ -78,14 +81,15 @@ public class AdminEpisodesController {
         ));
     }
 
+    @Operation(summary = "에피소드 목록 조회", description = "에피소드 목록 조회, 10개씩 페이징 처리", tags = {"Admin 에피소드"})
     @GetMapping
-    public ResponseEntity<CommonResponse<ResponseEpisodesPagination>> getEpisodesByNovels(@RequestParam Long novelId,
+    public ResponseEntity<CommonDataResponse<ResponseEpisodesPagination>> getEpisodesByNovels(@RequestParam Long novelId,
         @PageableDefault(size = 10) Pageable pageable) {
 
         EpisodesPageDto episodesPageDto = episodesService.getEpisodesByNovelsId(novelId, pageable);
 
         return ResponseEntity.ok(
-            new CommonResponse(
+            new CommonDataResponse(
                 ResponseNovelsPagination.builder()
                     .contents(episodesPageDto.getContents().stream().map(episodesDto ->
                         ResponseEpisodesByNovels.builder()

@@ -1,10 +1,9 @@
-package com.readme.novels.category.dto;
+package com.readme.novels.category.responseObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
@@ -12,9 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Setter
-public class MainCategoryDto {
+public class ResponseSubCategory {
     private Long id;
     private String title;
-    private boolean deleted;
+    private Long mainCategoryId;
+    private String mainCategoryTitle;
 }

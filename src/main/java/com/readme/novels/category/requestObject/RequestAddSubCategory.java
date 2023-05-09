@@ -1,20 +1,18 @@
-package com.readme.novels.category.dto;
+package com.readme.novels.category.requestObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-@Setter
-public class MainCategoryDto {
-    private Long id;
+public class RequestAddSubCategory {
     private String title;
     private boolean deleted;
+    private Long mainCategoryId;
 }

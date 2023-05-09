@@ -13,8 +13,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Setter
-public class MainCategoryDto {
+public class SubCategoryDto {
     private Long id;
     private String title;
     private boolean deleted;
+    private Long mainCategoryId;
+    private String mainCategoryTitle;
+
 }

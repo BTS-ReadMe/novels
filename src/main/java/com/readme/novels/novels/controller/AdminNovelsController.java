@@ -5,11 +5,14 @@ import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.requestObject.RequestAddNovels;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.requestObject.RequestUpdateNovels;
-import com.readme.novels.utils.CommonResponse;
+import com.readme.novels.commonResponseObject.CommonDataResponse;
 import com.readme.novels.novels.responseObject.ResponseNovels;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination.Pagination;
 import com.readme.novels.novels.service.NovelsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +38,13 @@ public class AdminNovelsController {
     private final NovelsService novelsService;
     private final Environment env;
 
-    @GetMapping("/health_check")
-    public String status() {
-        return String.format("It's Working in User Service on PORT : %s"
-            , env.getProperty("local.server.port"));
-    }
-
+    @Operation(summary = "소설 추가", description = "소설 추가", tags = {"Admin 소설"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PostMapping
     public void addNovels(@RequestBody RequestAddNovels requestAddNovels) {
         ModelMapper mapper = new ModelMapper();
@@ -50,6 +54,13 @@ public class AdminNovelsController {
 
     }
 
+    @Operation(summary = "소설 정보 수정", description = "소설 정보 수정, 수정할 소설 id url 전달", tags = {"Admin 소설"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PutMapping("/{id}")
     public void updateNovels(@RequestBody RequestUpdateNovels requestUpdateNovels,
         @PathVariable Long id) {
@@ -63,17 +74,31 @@ public class AdminNovelsController {
 
     }
 
+    @Operation(summary = "소설 삭제", description = "소설 삭제, soft delete 삭제", tags = {"Admin 소설"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @DeleteMapping("/{id}")
     public void deleteNovels(@PathVariable Long id) {
         novelsService.deleteNovels(id);
     }
 
+    @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {"Admin 소설"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<ResponseNovels>> getNovelsOne(@PathVariable Long id) {
+    public ResponseEntity<CommonDataResponse<ResponseNovels>> getNovelsOne(@PathVariable Long id) {
 
         NovelsDto novelsDto = novelsService.getNovelsById(id);
 
-        return ResponseEntity.ok().body(new CommonResponse(ResponseNovels.builder()
+        return ResponseEntity.ok().body(new CommonDataResponse(ResponseNovels.builder()
             .id(novelsDto.getId())
             .title(novelsDto.getTitle())
             .author(novelsDto.getAuthor())
@@ -88,8 +113,15 @@ public class AdminNovelsController {
             .build()));
     }
 
+    @Operation(summary = "소설 목록 조회", description = "소설 목록 조회, 작가, 제목 검색 가능, 10개씩 페이징 처리", tags = {"Admin 소설"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @GetMapping
-    public ResponseEntity<CommonResponse<ResponseNovelsPagination>> getNovelsAll(
+    public ResponseEntity<CommonDataResponse<ResponseNovelsPagination>> getNovelsAll(
         @RequestParam(required = false) String author,
         @RequestParam(required = false) String title,
         @RequestParam(required = false) Integer page) {
@@ -105,7 +137,7 @@ public class AdminNovelsController {
         PaginationDto paginationDto = novelsService.getPagination(novelsSearchParamDto);
 
         return ResponseEntity.ok(
-            new CommonResponse(ResponseNovelsPagination.builder()
+            new CommonDataResponse(ResponseNovelsPagination.builder()
                 .contents(novelsDtoList.stream().map(novelsDto -> ResponseNovels.builder()
                     .id(novelsDto.getId())
                     .title(novelsDto.getTitle())

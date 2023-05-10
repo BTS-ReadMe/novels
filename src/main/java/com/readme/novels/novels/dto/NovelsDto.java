@@ -4,6 +4,7 @@ import com.readme.novels.novels.model.Novels.Genre;
 import com.readme.novels.novels.model.Novels.Grade;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class NovelsDto {
     private String description;
     private String author;
     private Date startDate;
-    private Integer serializationDay;
+    private List<String> serializationDay;
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;

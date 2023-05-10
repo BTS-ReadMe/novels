@@ -3,6 +3,7 @@ package com.readme.novels.novels.service;
 import com.readme.novels.novels.dto.NovelsDto;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.dto.PaginationDto;
+import com.readme.novels.novels.dto.ResponseNovelsDto;
 import java.util.List;
 
 public interface NovelsService {
@@ -13,9 +14,9 @@ public interface NovelsService {
 
     void deleteNovels(Long id);
 
-    NovelsDto getNovelsById(Long id);
+    ResponseNovelsDto getNovelsById(Long id);
 
-    List<NovelsDto> getNovels(NovelsSearchParamDto novelsSearchParamDto);
+    List<ResponseNovelsDto> getNovels(NovelsSearchParamDto novelsSearchParamDto);
 
     PaginationDto getPagination(NovelsSearchParamDto novelsSearchParamDto);
 }

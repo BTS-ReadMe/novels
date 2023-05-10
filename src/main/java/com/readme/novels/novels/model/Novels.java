@@ -29,7 +29,7 @@ public class Novels extends BaseTimeEntity {
     private String description;
     private String author;
     private Date startDate;
-    private Integer serializationDay;
+    private String serializationDay;
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;

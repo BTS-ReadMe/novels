@@ -2,6 +2,7 @@ package com.readme.novels.novels.controller;
 
 import com.readme.novels.novels.dto.NovelsDto;
 import com.readme.novels.novels.dto.PaginationDto;
+import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.requestObject.RequestAddNovels;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.requestObject.RequestUpdateNovels;
@@ -71,7 +72,7 @@ public class AdminNovelsController {
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse<ResponseNovels>> getNovelsOne(@PathVariable Long id) {
 
-        NovelsDto novelsDto = novelsService.getNovelsById(id);
+        ResponseNovelsDto novelsDto = novelsService.getNovelsById(id);
 
         return ResponseEntity.ok().body(new CommonResponse(ResponseNovels.builder()
             .id(novelsDto.getId())
@@ -101,7 +102,7 @@ public class AdminNovelsController {
             .title(title)
             .build();
 
-        List<NovelsDto> novelsDtoList = novelsService.getNovels(novelsSearchParamDto);
+        List<ResponseNovelsDto> novelsDtoList = novelsService.getNovels(novelsSearchParamDto);
         PaginationDto paginationDto = novelsService.getPagination(novelsSearchParamDto);
 
         return ResponseEntity.ok(

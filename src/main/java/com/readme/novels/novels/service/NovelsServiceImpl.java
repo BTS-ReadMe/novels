@@ -2,6 +2,7 @@ package com.readme.novels.novels.service;
 
 import com.readme.novels.novels.dto.NovelsDto;
 import com.readme.novels.novels.dto.PaginationDto;
+import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
@@ -30,6 +31,13 @@ public class NovelsServiceImpl implements NovelsService {
             novelsDto.setSerializationStatus("연재중");
         }
 
+        List<String> serializationDays = novelsDto.getSerializationDay();
+        StringBuffer serialization = new StringBuffer();
+            serializationDays.forEach(item -> {
+                serialization.append(item + ",");
+        });
+
+
         Novels novels = Novels.builder()
             .title(novelsDto.getTitle())
             .author(novelsDto.getAuthor())
@@ -37,7 +45,7 @@ public class NovelsServiceImpl implements NovelsService {
             .genre(novelsDto.getGenre())
             .thumbnail(novelsDto.getThumbnail())
             .authorComment(novelsDto.getAuthorComment())
-            .serializationDay(novelsDto.getSerializationDay())
+            .serializationDay(serialization.toString().substring(0, serialization.length()-1))
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
             .description(novelsDto.getDescription())
@@ -55,13 +63,19 @@ public class NovelsServiceImpl implements NovelsService {
         iNovelsRepository.findById(novelsDto.getId()).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
+        List<String> serializationDays = novelsDto.getSerializationDay();
+        StringBuffer serialization = null;
+        serializationDays.forEach(item -> {
+            serialization.append(item + ",");
+        });
+
         Novels novels = Novels.builder()
             .id(novelsDto.getId())
             .genre(novelsDto.getGenre())
             .grade(novelsDto.getGrade())
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
-            .serializationDay(novelsDto.getSerializationDay())
+            .serializationDay(serialization.toString().substring(0, serialization.length()-1))
             .title(novelsDto.getTitle())
             .author(novelsDto.getAuthor())
             .thumbnail(novelsDto.getThumbnail())
@@ -94,12 +108,12 @@ public class NovelsServiceImpl implements NovelsService {
     }
 
     @Override
-    public NovelsDto getNovelsById(Long id) {
+    public ResponseNovelsDto getNovelsById(Long id) {
         Novels novels = iNovelsRepository.findById(id)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
-        NovelsDto novelsDto = NovelsDto.builder()
+        ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
             .id(novels.getId())
             .serializationDay(novels.getSerializationDay())
             .serializationStatus(novels.getSerializationStatus())
@@ -120,14 +134,14 @@ public class NovelsServiceImpl implements NovelsService {
     }
 
     @Override
-    public List<NovelsDto> getNovels(NovelsSearchParamDto novelsSearchParamDto) {
+    public List<ResponseNovelsDto> getNovels(NovelsSearchParamDto novelsSearchParamDto) {
 
         List<Novels> novelsList = novelsRepository.getNovels(novelsSearchParamDto);
 
-        List<NovelsDto> novelsDtoList = new ArrayList<>();
+        List<ResponseNovelsDto> novelsDtoList = new ArrayList<>();
 
         novelsList.forEach(item -> {
-            NovelsDto novelsDto = NovelsDto.builder()
+            ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
                 .id(item.getId())
                 .title(item.getTitle())
                 .author(item.getAuthor())

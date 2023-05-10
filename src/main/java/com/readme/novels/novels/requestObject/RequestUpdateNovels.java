@@ -1,7 +1,6 @@
 package com.readme.novels.novels.requestObject;
 
 import com.readme.novels.novels.model.Novels.Genre;
-import com.readme.novels.novels.model.Novels.Grade;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,6 @@ public class RequestUpdateNovels {
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;
-    private Grade grade;
+    private Integer grade;
     private Genre genre;
 }

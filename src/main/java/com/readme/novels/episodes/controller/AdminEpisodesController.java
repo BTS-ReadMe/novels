@@ -11,6 +11,8 @@ import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,12 @@ public class AdminEpisodesController {
     private final EpisodesService episodesService;
 
     @Operation(summary = "에피소드 추가", description = "에피소드 추가", tags = {"Admin 에피소드"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PostMapping
     public void addEpisodes(@RequestBody RequestAddEpisodes requestAddEpisodes) {
         ModelMapper mapper = new ModelMapper();
@@ -45,6 +53,12 @@ public class AdminEpisodesController {
     }
 
     @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {"Admin 에피소드"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PutMapping("/{id}")
     public void updateEpisodes(@RequestBody RequestUpdateEpisodes requestUpdateEpisodes,
         @PathVariable Long id) {
@@ -56,12 +70,24 @@ public class AdminEpisodesController {
     }
 
     @Operation(summary = "에피소드 삭제", description = "에피소드 삭제, soft delete 삭제", tags = {"Admin 에피소드"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
         episodesService.deleteEpisodes(id);
     }
 
     @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {"Admin 에피소드"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<CommonDataResponse<ResponseEpisodes>> getEpisodesById(@PathVariable Long id) {
 
@@ -82,6 +108,12 @@ public class AdminEpisodesController {
     }
 
     @Operation(summary = "에피소드 목록 조회", description = "에피소드 목록 조회, 10개씩 페이징 처리", tags = {"Admin 에피소드"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @GetMapping
     public ResponseEntity<CommonDataResponse<ResponseEpisodesPagination>> getEpisodesByNovels(@RequestParam Long novelId,
         @PageableDefault(size = 10) Pageable pageable) {

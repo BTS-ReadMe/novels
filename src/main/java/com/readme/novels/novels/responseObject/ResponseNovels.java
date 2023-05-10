@@ -1,7 +1,6 @@
 package com.readme.novels.novels.responseObject;
 
 import com.readme.novels.novels.model.Novels.Genre;
-import com.readme.novels.novels.model.Novels.Grade;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,11 +20,11 @@ public class ResponseNovels {
     private String author;
     private String description;
     private Date startDate;
-    private Integer serializationDay;
+    private String serializationDay;
     private String thumbnail;
     private String serializationStatus;
     private String authorComment;
 
     private Genre genre;
-    private Grade grade;
+    private Integer grade;
 }

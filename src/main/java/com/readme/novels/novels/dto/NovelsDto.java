@@ -32,5 +32,10 @@ public class NovelsDto {
     private Genre genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private List<Tags> tags;
 
+    @Getter
+    public class Tags {
+        private String name;
+    }
 }

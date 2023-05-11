@@ -1,6 +1,7 @@
 package com.readme.novels.novels.service;
 
 import com.readme.novels.novels.dto.NovelsDto;
+import com.readme.novels.novels.dto.NovelsDto.Tags;
 import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.model.Novels;
@@ -33,8 +34,14 @@ public class NovelsServiceImpl implements NovelsService {
 
         List<String> serializationDays = novelsDto.getSerializationDay();
         StringBuffer serialization = new StringBuffer();
-            serializationDays.forEach(item -> {
-                serialization.append(item + ",");
+        serializationDays.forEach(item -> {
+            serialization.append(item + ",");
+        });
+
+        List<Tags> tags = novelsDto.getTags();
+        StringBuffer tagString = new StringBuffer();
+        tags.forEach(item -> {
+            tagString.append(item + ",");
         });
 
 
@@ -49,6 +56,7 @@ public class NovelsServiceImpl implements NovelsService {
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
             .description(novelsDto.getDescription())
+            .tags(tagString.toString().substring(0, tagString.length()-1))
             .build();
 
         iNovelsRepository.save(novels);

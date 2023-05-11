@@ -34,9 +34,11 @@ public class Novels extends BaseTimeEntity {
     private String thumbnail;
     private String authorComment;
     private Integer grade;
+    private String tags;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
+
 
     @Getter
     public enum Genre {

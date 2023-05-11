@@ -27,7 +27,7 @@ public class MainCategoryServiceImpl implements MainCategoryService{
     @Override
     public List<MainCategoryDto> getMainCategory() {
 
-        List<MainCategory> mainCategoryList = mainCategoryRepository.findAll();
+        List<MainCategory> mainCategoryList = mainCategoryRepository.findAllByOrderById();
         List<MainCategoryDto> mainCategoryDtoList = new ArrayList<>();
 
         mainCategoryList.forEach(mainCategory -> {

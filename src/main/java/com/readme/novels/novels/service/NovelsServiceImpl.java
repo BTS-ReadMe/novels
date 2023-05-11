@@ -77,6 +77,12 @@ public class NovelsServiceImpl implements NovelsService {
             serialization.append(item + ",");
         });
 
+        List<Tags> tags = novelsDto.getTags();
+        StringBuffer tagString = new StringBuffer();
+        tags.forEach(item -> {
+            tagString.append(item + ",");
+        });
+
         Novels novels = Novels.builder()
             .id(novelsDto.getId())
             .genre(novelsDto.getGenre())
@@ -89,6 +95,7 @@ public class NovelsServiceImpl implements NovelsService {
             .thumbnail(novelsDto.getThumbnail())
             .authorComment(novelsDto.getAuthorComment())
             .description(novelsDto.getDescription())
+            .tags(tagString.toString().substring(0, tagString.length()-1))
             .build();
 
         iNovelsRepository.save(novels);
@@ -112,6 +119,7 @@ public class NovelsServiceImpl implements NovelsService {
             .serializationStatus("삭제")
             .startDate(novels.getStartDate())
             .thumbnail(novels.getThumbnail())
+            .tags(novels.getTags())
             .build();
     }
 

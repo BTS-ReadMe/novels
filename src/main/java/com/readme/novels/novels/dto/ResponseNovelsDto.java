@@ -31,5 +31,6 @@ public class ResponseNovelsDto {
     private Genre genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private String tags;
 
 }

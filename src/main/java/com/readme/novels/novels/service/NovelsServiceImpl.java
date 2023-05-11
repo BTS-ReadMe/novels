@@ -1,6 +1,7 @@
 package com.readme.novels.novels.service;
 
 import com.readme.novels.novels.dto.NovelsDto;
+import com.readme.novels.novels.dto.NovelsDto.Tags;
 import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.model.Novels;
@@ -8,6 +9,7 @@ import com.readme.novels.novels.repository.INovelsRepository;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.repository.NovelsRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +35,14 @@ public class NovelsServiceImpl implements NovelsService {
 
         List<String> serializationDays = novelsDto.getSerializationDay();
         StringBuffer serialization = new StringBuffer();
-            serializationDays.forEach(item -> {
-                serialization.append(item + ",");
+        serializationDays.forEach(item -> {
+            serialization.append(item + ",");
+        });
+
+        List<Tags> tags = novelsDto.getTags();
+        StringBuffer tagString = new StringBuffer();
+        tags.forEach(item -> {
+            tagString.append(item.getName() + ",");
         });
 
 
@@ -49,6 +57,7 @@ public class NovelsServiceImpl implements NovelsService {
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
             .description(novelsDto.getDescription())
+            .tags(tagString.toString().substring(0, tagString.length()-1))
             .build();
 
         iNovelsRepository.save(novels);
@@ -69,6 +78,12 @@ public class NovelsServiceImpl implements NovelsService {
             serialization.append(item + ",");
         });
 
+        List<Tags> tags = novelsDto.getTags();
+        StringBuffer tagString = new StringBuffer();
+        tags.forEach(item -> {
+            tagString.append(item.getName() + ",");
+        });
+
         Novels novels = Novels.builder()
             .id(novelsDto.getId())
             .genre(novelsDto.getGenre())
@@ -81,6 +96,7 @@ public class NovelsServiceImpl implements NovelsService {
             .thumbnail(novelsDto.getThumbnail())
             .authorComment(novelsDto.getAuthorComment())
             .description(novelsDto.getDescription())
+            .tags(tagString.toString().substring(0, tagString.length()-1))
             .build();
 
         iNovelsRepository.save(novels);
@@ -104,7 +120,10 @@ public class NovelsServiceImpl implements NovelsService {
             .serializationStatus("삭제")
             .startDate(novels.getStartDate())
             .thumbnail(novels.getThumbnail())
+            .tags(novels.getTags())
             .build();
+
+        iNovelsRepository.save(updateNovels);
     }
 
     @Override
@@ -113,9 +132,11 @@ public class NovelsServiceImpl implements NovelsService {
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
+        List<String> serializationDay = Arrays.asList(novels.getSerializationDay().split(","));
+        List<String> tags = Arrays.asList(novels.getTags().split(","));
         ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
             .id(novels.getId())
-            .serializationDay(novels.getSerializationDay())
+            .serializationDay(serializationDay)
             .serializationStatus(novels.getSerializationStatus())
             .grade(novels.getGrade())
             .genre(novels.getGenre())
@@ -128,6 +149,7 @@ public class NovelsServiceImpl implements NovelsService {
             .thumbnail(novels.getThumbnail())
             .title(novels.getTitle())
             .startDate(novels.getStartDate())
+            .tags(tags)
             .build();
 
         return novelsDto;
@@ -141,18 +163,21 @@ public class NovelsServiceImpl implements NovelsService {
         List<ResponseNovelsDto> novelsDtoList = new ArrayList<>();
 
         novelsList.forEach(item -> {
+            List<String> serializationDay = Arrays.asList(item.getSerializationDay().split(","));
+            List<String> tags = Arrays.asList(item.getTags().split(","));
             ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
                 .id(item.getId())
                 .title(item.getTitle())
                 .author(item.getAuthor())
                 .description(item.getDescription())
                 .startDate(item.getStartDate())
-                .serializationDay(item.getSerializationDay())
+                .serializationDay(serializationDay)
                 .serializationStatus(item.getSerializationStatus())
                 .thumbnail(item.getThumbnail())
                 .genre(item.getGenre())
                 .grade(item.getGrade())
                 .authorComment(item.getAuthorComment())
+                .tags(tags)
                 .build();
 
             novelsDtoList.add(novelsDto);

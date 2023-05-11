@@ -41,7 +41,7 @@ public class NovelsServiceImpl implements NovelsService {
         List<Tags> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
         tags.forEach(item -> {
-            tagString.append(item + ",");
+            tagString.append(item.getName() + ",");
         });
 
 
@@ -80,7 +80,7 @@ public class NovelsServiceImpl implements NovelsService {
         List<Tags> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
         tags.forEach(item -> {
-            tagString.append(item + ",");
+            tagString.append(item.getName() + ",");
         });
 
         Novels novels = Novels.builder()
@@ -121,6 +121,8 @@ public class NovelsServiceImpl implements NovelsService {
             .thumbnail(novels.getThumbnail())
             .tags(novels.getTags())
             .build();
+
+        iNovelsRepository.save(updateNovels);
     }
 
     @Override

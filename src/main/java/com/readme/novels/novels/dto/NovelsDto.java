@@ -35,7 +35,11 @@ public class NovelsDto {
     private List<Tags> tags;
 
     @Getter
-    public class Tags {
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
+    public static class Tags {
         private String name;
     }
 }

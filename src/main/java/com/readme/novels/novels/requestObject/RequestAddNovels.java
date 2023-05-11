@@ -1,5 +1,6 @@
 package com.readme.novels.novels.requestObject;
 
+import com.readme.novels.novels.dto.NovelsDto.Tags;
 import com.readme.novels.novels.model.Novels.Genre;
 import java.util.Date;
 import java.util.List;
@@ -26,4 +27,5 @@ public class RequestAddNovels {
     private String authorComment;
     private Integer grade;
     private Genre genre;
+    private List<Tags> tags;
 }

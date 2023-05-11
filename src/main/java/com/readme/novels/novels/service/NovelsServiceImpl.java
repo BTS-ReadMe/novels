@@ -144,6 +144,7 @@ public class NovelsServiceImpl implements NovelsService {
             .thumbnail(novels.getThumbnail())
             .title(novels.getTitle())
             .startDate(novels.getStartDate())
+            .tags(novels.getTags())
             .build();
 
         return novelsDto;
@@ -169,6 +170,7 @@ public class NovelsServiceImpl implements NovelsService {
                 .genre(item.getGenre())
                 .grade(item.getGrade())
                 .authorComment(item.getAuthorComment())
+                .tags(item.getTags())
                 .build();
 
             novelsDtoList.add(novelsDto);

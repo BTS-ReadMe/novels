@@ -111,6 +111,7 @@ public class AdminNovelsController {
             .genre(novelsDto.getGenre())
             .grade(novelsDto.getGrade())
             .authorComment(novelsDto.getAuthorComment())
+            .tags(novelsDto.getTags())
             .build()));
     }
 
@@ -151,6 +152,7 @@ public class AdminNovelsController {
                     .genre(novelsDto.getGenre())
                     .grade(novelsDto.getGrade())
                     .authorComment(novelsDto.getAuthorComment())
+                    .tags(novelsDto.getTags())
                     .build()))
                 .pagination(Pagination.builder()
                     .page(paginationDto.getPage())

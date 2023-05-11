@@ -27,4 +27,6 @@ public class ResponseNovels {
 
     private Genre genre;
     private Integer grade;
+
+    private String tags;
 }

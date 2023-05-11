@@ -1,7 +1,6 @@
 package com.readme.novels.novels.service;
 
 import com.readme.novels.novels.dto.NovelsDto;
-import com.readme.novels.novels.dto.NovelsDto.Tags;
 import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.model.Novels;
@@ -39,10 +38,10 @@ public class NovelsServiceImpl implements NovelsService {
             serialization.append(item + ",");
         });
 
-        List<Tags> tags = novelsDto.getTags();
+        List<String> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
         tags.forEach(item -> {
-            tagString.append(item.getName() + ",");
+            tagString.append(item + ",");
         });
 
 
@@ -78,10 +77,10 @@ public class NovelsServiceImpl implements NovelsService {
             serialization.append(item + ",");
         });
 
-        List<Tags> tags = novelsDto.getTags();
+        List<String> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
         tags.forEach(item -> {
-            tagString.append(item.getName() + ",");
+            tagString.append(item + ",");
         });
 
         Novels novels = Novels.builder()

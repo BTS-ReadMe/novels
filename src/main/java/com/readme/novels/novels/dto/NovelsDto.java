@@ -32,14 +32,6 @@ public class NovelsDto {
     private Genre genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
-    private List<Tags> tags;
+    private List<String> tags;
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @ToString
-    public static class Tags {
-        private String name;
-    }
 }

@@ -1,6 +1,5 @@
 package com.readme.novels.novels.requestObject;
 
-import com.readme.novels.novels.model.Novels.Genre;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,6 +24,6 @@ public class RequestAddNovels {
     private String thumbnail;
     private String authorComment;
     private Integer grade;
-    private Genre genre;
+    private String genre;
     private List<String> tags;
 }

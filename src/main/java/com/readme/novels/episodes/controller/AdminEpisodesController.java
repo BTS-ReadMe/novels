@@ -129,6 +129,9 @@ public class AdminEpisodesController {
                             .title(episodesDto.getTitle())
                             .registration(episodesDto.getRegistration())
                             .free(episodesDto.getFree())
+                            .createDate(episodesDto.getCreateDate())
+                            .updateDate(episodesDto.getUpdateDate())
+                            .status(episodesDto.getStatus())
                             .build()
                     ))
                     .pagination(

@@ -17,5 +17,8 @@ public class ResponseEpisodesByNovels {
     private String title;
     private LocalDateTime registration;
     private boolean free;
+    private String status;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
 }

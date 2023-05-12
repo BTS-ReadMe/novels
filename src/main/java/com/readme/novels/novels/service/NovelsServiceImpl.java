@@ -72,7 +72,7 @@ public class NovelsServiceImpl implements NovelsService {
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
 
         List<String> serializationDays = novelsDto.getSerializationDay();
-        StringBuffer serialization = null;
+        StringBuffer serialization = new StringBuffer();
         serializationDays.forEach(item -> {
             serialization.append(item + ",");
         });

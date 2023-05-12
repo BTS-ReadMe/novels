@@ -36,18 +36,18 @@ public class Novels extends BaseTimeEntity {
     private Integer grade;
     private String tags;
 
-    @Enumerated(EnumType.STRING)
-    private Genre genre;
+//    @Enumerated(EnumType.STRING)
+    private Long genre;
 
 
-    @Getter
-    public enum Genre {
-        판타지,
-        현판,
-        무협,
-        드라마,
-        로판,
-        로맨스;
-    }
+//    @Getter
+//    public enum Genre {
+//        판타지,
+//        현판,
+//        무협,
+//        드라마,
+//        로판,
+//        로맨스;
+//    }
 
 }

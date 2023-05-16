@@ -1,6 +1,5 @@
 package com.readme.novels.novels.dto;
 
-import com.readme.novels.novels.model.Novels.Genre;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +28,7 @@ public class NovelsDto {
     private String thumbnail;
     private String authorComment;
     private Integer grade;
-    private Genre genre;
+    private String genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private List<String> tags;

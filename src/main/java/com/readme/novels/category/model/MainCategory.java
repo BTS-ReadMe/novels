@@ -1,25 +1,27 @@
-package com.readme.novels.model;
+package com.readme.novels.category.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Episodes {
+public class MainCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long novelId;
     private String title;
-    private String content;
-    private Long views;
-    private Boolean free;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean deleted;
 }

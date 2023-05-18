@@ -1,22 +1,22 @@
-package com.readme.novels.novels.messagequeue;
+package com.readme.novels.episodes.messagequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.readme.novels.novels.dto.NovelsDto;
+import com.readme.novels.episodes.dto.EpisodesDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
-public class NovelsKafkaProducer {
+@Slf4j
+public class EpisodesKafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void addNovels(String topic, NovelsDto novelsDto) {
+    public void addEpisodes(String topic, EpisodesDto episodesDto) {
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = "";
 
@@ -25,13 +25,12 @@ public class NovelsKafkaProducer {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
-            jsonInString = mapper.writeValueAsString(novelsDto);
+            jsonInString = mapper.writeValueAsString(episodesDto);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         kafkaTemplate.send(topic, jsonInString);
 //        log.info("topic : {}, data : {} ",topic,jsonInString);
-
     }
 }

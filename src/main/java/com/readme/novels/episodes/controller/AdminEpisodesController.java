@@ -2,6 +2,7 @@ package com.readme.novels.episodes.controller;
 
 import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
+import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminEpisodesController {
 
     private final EpisodesService episodesService;
+    private final EpisodesKafkaProducer episodesKafkaProducer;
 
     @Operation(summary = "에피소드 추가", description = "에피소드 추가", tags = {"Admin 에피소드"})
     @ApiResponses({
@@ -50,6 +52,9 @@ public class AdminEpisodesController {
         EpisodesDto episodesDto = mapper.map(requestAddEpisodes, EpisodesDto.class);
 
         episodesService.addEpisodes(episodesDto);
+
+        episodesKafkaProducer.addEpisodes("addEpisodes", episodesDto);
+
     }
 
     @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {"Admin 에피소드"})

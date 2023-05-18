@@ -44,7 +44,10 @@ public class EpisodesServiceImpl implements EpisodesService {
             .status(episodesDto.getStatus())
             .build();
 
-        episodesRepository.save(episodes);
+        Episodes savedEpisodes = episodesRepository.save(episodes);
+        episodesDto.setId(savedEpisodes.getId());
+        episodesDto.setViews(0L);
+
     }
 
     @Override

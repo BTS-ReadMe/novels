@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class NovelsKafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public NovelsDto addNovels(String topic, NovelsDto novelsDto) {
+    public void addNovels(String topic, NovelsDto novelsDto) {
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = "";
         try {
@@ -25,6 +25,5 @@ public class NovelsKafkaProducer {
 
         kafkaTemplate.send(topic, jsonInString);
 
-        return novelsDto;
     }
 }

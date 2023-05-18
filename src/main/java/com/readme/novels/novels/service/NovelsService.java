@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NovelsService {
 
-    void addNovels(NovelsDto novelsDto);
+    NovelsDto addNovels(NovelsDto novelsDto);
 
     void updateNovels(NovelsDto novelsDto);
 

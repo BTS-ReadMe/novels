@@ -29,7 +29,7 @@ public class NovelsServiceImpl implements NovelsService {
     private final MainCategoryRepository mainCategoryRepository;
 
     @Override
-    public NovelsDto addNovels(NovelsDto novelsDto) {
+    public void addNovels(NovelsDto novelsDto) {
 
         if (novelsDto.getSerializationStatus() == null) {
             novelsDto.setSerializationStatus("연재중");
@@ -66,11 +66,9 @@ public class NovelsServiceImpl implements NovelsService {
             .tags(tagString.toString().substring(0, tagString.length() - 1))
             .build();
 
-        iNovelsRepository.save(novels);
+        Novels savedNovels = iNovelsRepository.save(novels);
 
-        novelsDto.setId(iNovelsRepository.save(novels).getId());
-
-        return novelsDto;
+        novelsDto.setId(savedNovels.getId());
 
     }
 

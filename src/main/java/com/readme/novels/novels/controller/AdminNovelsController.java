@@ -73,9 +73,9 @@ public class AdminNovelsController {
         NovelsDto novelsDto = mapper.map(requestUpdateNovels, NovelsDto.class);
         novelsDto.setId(id);
 
-        log.info(novelsDto.toString());
-
         novelsService.updateNovels(novelsDto);
+
+        novelsKafkaProducer.updateNovels("updateNovels",novelsDto);
 
     }
 
@@ -89,6 +89,8 @@ public class AdminNovelsController {
     @DeleteMapping("/{id}")
     public void deleteNovels(@PathVariable Long id) {
         novelsService.deleteNovels(id);
+
+        novelsKafkaProducer.deleteNovels("deleteNovels", id);
     }
 
     @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {"Admin 소설"})

@@ -72,6 +72,9 @@ public class AdminEpisodesController {
 
         episodesService.updateEpisodes(id, episodesDto);
 
+        episodesDto.setId(id);
+        episodesKafkaProducer.updateEpisodes("updateEpisodes",episodesDto);
+
     }
 
     @Operation(summary = "에피소드 삭제", description = "에피소드 삭제, soft delete 삭제", tags = {"Admin 에피소드"})
@@ -84,6 +87,8 @@ public class AdminEpisodesController {
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
         episodesService.deleteEpisodes(id);
+
+        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", id);
     }
 
     @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {"Admin 에피소드"})

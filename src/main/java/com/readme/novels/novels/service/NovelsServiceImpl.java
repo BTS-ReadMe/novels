@@ -66,8 +66,9 @@ public class NovelsServiceImpl implements NovelsService {
             .tags(tagString.toString().substring(0, tagString.length() - 1))
             .build();
 
-        iNovelsRepository.save(novels);
+        Novels savedNovels = iNovelsRepository.save(novels);
 
+        novelsDto.setId(savedNovels.getId());
 
     }
 

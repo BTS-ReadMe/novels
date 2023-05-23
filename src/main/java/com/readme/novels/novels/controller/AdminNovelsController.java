@@ -3,6 +3,7 @@ package com.readme.novels.novels.controller;
 import com.readme.novels.novels.dto.NovelsDto;
 import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.dto.ResponseNovelsDto;
+import com.readme.novels.novels.messagequeue.NovelsKafkaProducer;
 import com.readme.novels.novels.requestObject.RequestAddNovels;
 import com.readme.novels.novels.dto.NovelsSearchParamDto;
 import com.readme.novels.novels.requestObject.RequestUpdateNovels;
@@ -38,6 +39,7 @@ public class AdminNovelsController {
 
     private final NovelsService novelsService;
     private final Environment env;
+    private final NovelsKafkaProducer novelsKafkaProducer;
 
     @Operation(summary = "소설 추가", description = "소설 추가", tags = {"Admin 소설"})
     @ApiResponses({
@@ -52,6 +54,8 @@ public class AdminNovelsController {
         NovelsDto novelsDto = mapper.map(requestAddNovels, NovelsDto.class);
 
         novelsService.addNovels(novelsDto);
+
+        novelsKafkaProducer.addNovels("addNovels", novelsDto);
 
     }
 
@@ -69,9 +73,9 @@ public class AdminNovelsController {
         NovelsDto novelsDto = mapper.map(requestUpdateNovels, NovelsDto.class);
         novelsDto.setId(id);
 
-        log.info(novelsDto.toString());
-
         novelsService.updateNovels(novelsDto);
+
+        novelsKafkaProducer.updateNovels("updateNovels",novelsDto);
 
     }
 
@@ -85,6 +89,8 @@ public class AdminNovelsController {
     @DeleteMapping("/{id}")
     public void deleteNovels(@PathVariable Long id) {
         novelsService.deleteNovels(id);
+
+        novelsKafkaProducer.deleteNovels("deleteNovels", id);
     }
 
     @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {"Admin 소설"})

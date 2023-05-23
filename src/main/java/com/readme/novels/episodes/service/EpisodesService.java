@@ -18,5 +18,5 @@ public interface EpisodesService {
 
     EpisodesDto getEpisodesByUser(Long id);
 
-    void plusViewsCount(Long id);
+    void plusViewsCount(Long id, Integer plusCount);
 }

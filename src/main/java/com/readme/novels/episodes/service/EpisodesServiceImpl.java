@@ -162,9 +162,6 @@ public class EpisodesServiceImpl implements EpisodesService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
         });
         
-        // 조회수 1증가
-        plusViewsCount(id);
-
         EpisodesDto episodesDto = EpisodesDto.builder()
             .id(episodes.getId())
             .title(episodes.getTitle())
@@ -180,14 +177,14 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public void plusViewsCount(Long id) {
+    public void plusViewsCount(Long id, Integer plusCount) {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
         });
 
         Episodes updateEpisodes = Episodes.builder()
             .title(episodes.getTitle())
-            .views(episodes.getViews()+1)
+            .views(episodes.getViews()+plusCount)
             .content(episodes.getContent())
             .registration(episodes.getRegistration())
             .free(episodes.getFree())

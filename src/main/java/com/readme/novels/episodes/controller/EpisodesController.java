@@ -1,6 +1,8 @@
 package com.readme.novels.episodes.controller;
 
 import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.PlusViewsDto;
+import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesUser;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EpisodesController {
 
     private final EpisodesService episodesService;
+    private final EpisodesKafkaProducer episodesKafkaProducer;
 
     @Operation(summary = "에피소드 조회", description = "에피소드 조회, 조회할 에피소드 id url 전달", tags = {"에피소드"})
     @ApiResponses({
@@ -32,6 +35,10 @@ public class EpisodesController {
     public ResponseEntity<CommonDataResponse<ResponseEpisodesUser>> getEpisodes(@PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesByUser(id);
+
+        // 조회수 증가 topic 전송
+        PlusViewsDto plusViewsDto = new PlusViewsDto(episodesDto);
+        episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsDto);
 
         return ResponseEntity.ok(
             new CommonDataResponse(

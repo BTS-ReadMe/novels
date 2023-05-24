@@ -18,7 +18,7 @@ public class NovelsRepository {
     public List<Novels> getNovels(NovelsSearchParamDto novelsSearchParamDto) {
 
         String jpql = "select n from Novels n ";
-        Boolean isFirst = true;
+        boolean isFirst = true;
         if (novelsSearchParamDto.getAuthor() != null) {
             if (isFirst) {
                 jpql += "where";
@@ -63,7 +63,7 @@ public class NovelsRepository {
     public PaginationDto getPagination(NovelsSearchParamDto novelsSearchParamDto) {
         String countJpql = "select count(n) from Novels n ";
 
-        Boolean isFirst = true;
+        boolean isFirst = true;
         if (novelsSearchParamDto.getAuthor() != null) {
             if (isFirst) {
                 countJpql += "where";
@@ -103,16 +103,12 @@ public class NovelsRepository {
         long totalElements = count;
         int totalPage = count % size == 0 ? (int)(count / size) : (int)(count / size + 1);
 
-
-        PaginationDto paginationDto = PaginationDto.builder()
+        return PaginationDto.builder()
             .page(page)
             .size(size)
             .totalElements(totalElements)
             .totalPage(totalPage)
             .build();
-
-
-        return paginationDto;
     }
 
 

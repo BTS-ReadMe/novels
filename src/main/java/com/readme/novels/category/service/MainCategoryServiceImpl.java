@@ -31,11 +31,10 @@ public class MainCategoryServiceImpl implements MainCategoryService{
         List<MainCategoryDto> mainCategoryDtoList = new ArrayList<>();
 
         mainCategoryList.forEach(mainCategory -> {
-            MainCategoryDto mainCategoryDto = MainCategoryDto.builder()
-                .id(mainCategory.getId())
-                .title(mainCategory.getTitle())
-                .build();
-            mainCategoryDtoList.add(mainCategoryDto);
+            if (!mainCategory.isDeleted()) {
+                MainCategoryDto mainCategoryDto = new MainCategoryDto(mainCategory);
+                mainCategoryDtoList.add(mainCategoryDto);
+            }
         });
 
         return mainCategoryDtoList;

@@ -31,25 +31,17 @@ public class NovelsServiceImpl implements NovelsService {
     @Override
     public void addNovels(NovelsDto novelsDto) {
 
-        if (novelsDto.getSerializationStatus() == null) {
-            novelsDto.setSerializationStatus("연재중");
-        }
-
         List<String> serializationDays = novelsDto.getSerializationDay();
-        StringBuffer serialization = new StringBuffer();
-        serializationDays.forEach(item -> {
-            serialization.append(item + ",");
-        });
+        StringBuilder serialization = new StringBuilder();
+        serializationDays.forEach(item -> serialization.append(item).append(","));
 
         List<String> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
-        tags.forEach(item -> {
-            tagString.append(item + ",");
-        });
+        tags.forEach(item -> tagString.append(item).append(","));
 
         MainCategory mainCategory = mainCategoryRepository.findByTitle(novelsDto.getGenre())
             .orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리 입니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             });
 
         Novels novels = Novels.builder()
@@ -59,7 +51,7 @@ public class NovelsServiceImpl implements NovelsService {
             .genre(mainCategory.getId())
             .thumbnail(novelsDto.getThumbnail())
             .authorComment(novelsDto.getAuthorComment())
-            .serializationDay(serialization.toString().substring(0, serialization.length() - 1))
+            .serializationDay(serialization.substring(0, serialization.length() - 1))
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
             .description(novelsDto.getDescription())
@@ -68,7 +60,7 @@ public class NovelsServiceImpl implements NovelsService {
 
         Novels savedNovels = iNovelsRepository.save(novels);
 
-        novelsDto.setId(savedNovels.getId());
+        novelsDto.setCreatedNovelId(savedNovels.getId());
 
     }
 
@@ -77,23 +69,19 @@ public class NovelsServiceImpl implements NovelsService {
     public void updateNovels(NovelsDto novelsDto) {
 
         iNovelsRepository.findById(novelsDto.getId()).orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         List<String> serializationDays = novelsDto.getSerializationDay();
         StringBuffer serialization = new StringBuffer();
-        serializationDays.forEach(item -> {
-            serialization.append(item + ",");
-        });
+        serializationDays.forEach(item -> serialization.append(item).append(","));
 
         List<String> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
-        tags.forEach(item -> {
-            tagString.append(item + ",");
-        });
+        tags.forEach(item -> tagString.append(item).append(","));
 
         MainCategory mainCategory = mainCategoryRepository.findByTitle(novelsDto.getGenre())
             .orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리 입니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             });
 
         Novels novels = Novels.builder()
@@ -118,7 +106,7 @@ public class NovelsServiceImpl implements NovelsService {
     @Override
     public void deleteNovels(Long id) {
         Novels novels = iNovelsRepository.findById(id).orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설 입니다."));
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Novels updateNovels = Novels.builder()
             .id(novels.getId())
@@ -142,31 +130,20 @@ public class NovelsServiceImpl implements NovelsService {
     public ResponseNovelsDto getNovelsById(Long id) {
         Novels novels = iNovelsRepository.findById(id)
             .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다."));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         List<String> serializationDay = Arrays.asList(novels.getSerializationDay().split(","));
         List<String> tags = Arrays.asList(novels.getTags().split(","));
         MainCategory mainCategory = mainCategoryRepository.findById(novels.getGenre())
             .orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리 입니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             });
-        ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
-            .id(novels.getId())
-            .serializationDay(serializationDay)
-            .serializationStatus(novels.getSerializationStatus())
-            .grade(novels.getGrade())
-            .genre(mainCategory.getTitle())
-            .author(novels.getAuthor())
-            .authorComment(novels.getAuthorComment())
-            .createDate(novels.getCreateDate())
-            .updateDate(novels.getUpdateDate())
-            .description(novels.getDescription())
-            .startDate(novels.getStartDate())
-            .thumbnail(novels.getThumbnail())
-            .title(novels.getTitle())
-            .startDate(novels.getStartDate())
-            .tags(tags)
-            .build();
+
+        ResponseNovelsDto novelsDto = new ResponseNovelsDto(novels);
+        novelsDto.setModifiedSerializationDay(serializationDay);
+        novelsDto.setModifiedTags(tags);
+        novelsDto.setGenreOfMainCategory(mainCategory.getTitle());
+
 
         return novelsDto;
     }
@@ -178,27 +155,17 @@ public class NovelsServiceImpl implements NovelsService {
 
         List<ResponseNovelsDto> novelsDtoList = new ArrayList<>();
 
-        novelsList.forEach(item -> {
-            List<String> serializationDay = Arrays.asList(item.getSerializationDay().split(","));
-            List<String> tags = Arrays.asList(item.getTags().split(","));
-            MainCategory mainCategory = mainCategoryRepository.findById(item.getGenre())
+        novelsList.forEach(novels -> {
+            List<String> serializationDay = Arrays.asList(novels.getSerializationDay().split(","));
+            List<String> tags = Arrays.asList(novels.getTags().split(","));
+            MainCategory mainCategory = mainCategoryRepository.findById(novels.getGenre())
                 .orElseThrow(() -> {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 카테고리 입니다.");
                 });
-            ResponseNovelsDto novelsDto = ResponseNovelsDto.builder()
-                .id(item.getId())
-                .title(item.getTitle())
-                .author(item.getAuthor())
-                .description(item.getDescription())
-                .startDate(item.getStartDate())
-                .serializationDay(serializationDay)
-                .serializationStatus(item.getSerializationStatus())
-                .thumbnail(item.getThumbnail())
-                .genre(mainCategory.getTitle())
-                .grade(item.getGrade())
-                .authorComment(item.getAuthorComment())
-                .tags(tags)
-                .build();
+            ResponseNovelsDto novelsDto = new ResponseNovelsDto(novels);
+            novelsDto.setModifiedSerializationDay(serializationDay);
+            novelsDto.setModifiedTags(tags);
+            novelsDto.setGenreOfMainCategory(mainCategory.getTitle());
 
             novelsDtoList.add(novelsDto);
         });

@@ -1,6 +1,6 @@
 package com.readme.novels.episodes.controller;
 
-import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.PlusViewsDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesUser;
@@ -34,20 +34,15 @@ public class EpisodesController {
     @GetMapping("/{id}")
     public ResponseEntity<CommonDataResponse<ResponseEpisodesUser>> getEpisodes(@PathVariable Long id) {
 
-        EpisodesDto episodesDto = episodesService.getEpisodesByUser(id);
+        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id);
 
         // 조회수 증가 topic 전송
-        PlusViewsDto plusViewsDto = new PlusViewsDto(episodesDto);
+        PlusViewsDto plusViewsDto = new PlusViewsDto(episodesDtoByUser);
         episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsDto);
 
         return ResponseEntity.ok(
-            new CommonDataResponse(
-                ResponseEpisodesUser.builder()
-                    .id(episodesDto.getId())
-                    .title(episodesDto.getTitle())
-                    .content(episodesDto.getContent())
-                    .registration(episodesDto.getRegistration())
-                    .build()
+            new CommonDataResponse<>(
+                new ResponseEpisodesUser(episodesDtoByUser)
             )
         );
     }

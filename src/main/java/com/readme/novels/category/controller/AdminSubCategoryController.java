@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +28,8 @@ public class AdminSubCategoryController {
     })
     @PostMapping
     public void addSubCategory(@RequestBody RequestAddSubCategory requestAddSubCategory) {
-        ModelMapper mapper = new ModelMapper();
-        SubCategoryDto subCategoryDto = mapper.map(requestAddSubCategory, SubCategoryDto.class);
-        subCategoryService.addSubCategory(subCategoryDto);
+
+        subCategoryService.addSubCategory(new SubCategoryDto(requestAddSubCategory));
 
     }
 

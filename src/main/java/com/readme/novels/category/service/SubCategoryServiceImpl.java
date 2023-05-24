@@ -23,7 +23,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public void addSubCategory(SubCategoryDto subCategoryDto) {
         MainCategory mainCategory = mainCategoryRepository.findById(
             subCategoryDto.getMainCategoryId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 메인 카테고리 입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
 
         SubCategory subCategory = SubCategory.builder()
@@ -39,20 +39,18 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public List<SubCategoryDto> getSubCategory(Long mainCategoryID) {
 
         mainCategoryRepository.findById(mainCategoryID).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 메인 Main 카테고리 입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
         List<SubCategory> subCategoryList = subCategoryRepository.findByMainCategoryId(
             mainCategoryID);
         List<SubCategoryDto> subCategoryDtoList = new ArrayList<>();
 
         subCategoryList.forEach(subCategory -> {
-            SubCategoryDto subCategoryDto = SubCategoryDto.builder()
-                .id(subCategory.getId())
-                .title(subCategory.getTitle())
-                .mainCategoryId(subCategory.getMainCategory().getId())
-                .mainCategoryTitle(subCategory.getMainCategory().getTitle())
-                .build();
-            subCategoryDtoList.add(subCategoryDto);
+            if (!subCategory.isDeleted()) {
+                SubCategoryDto subCategoryDto = new SubCategoryDto(subCategory);
+
+                subCategoryDtoList.add(subCategoryDto);
+            }
         });
 
         return subCategoryDtoList;

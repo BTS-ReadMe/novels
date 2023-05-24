@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ResponseMainCategory {
-    private Long id;
+    private long id;
     private String title;
 
     public ResponseMainCategory(MainCategoryDto mainCategoryDto) {

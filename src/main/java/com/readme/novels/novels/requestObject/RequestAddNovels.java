@@ -16,7 +16,7 @@ public class RequestAddNovels {
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;
-    private Integer grade;
+    private int grade;
     private String genre;
     private List<String> tags;
 }

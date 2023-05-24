@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class ResponseEpisodes {
-    private Long id;
+    private long id;
     private String title;
     private String content;
     private LocalDateTime registration;
@@ -20,7 +20,7 @@ public class ResponseEpisodes {
         this.title = episodesDto.getTitle();
         this.content = episodesDto.getContent();
         this.registration = episodesDto.getRegistration();
-        this.free = episodesDto.getFree();
+        this.free = episodesDto.isFree();
         this.status = episodesDto.getStatus();
         this.createDate = episodesDto.getCreateDate();
         this.updateDate = episodesDto.getUpdateDate();

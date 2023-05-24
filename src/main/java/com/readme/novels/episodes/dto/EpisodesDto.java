@@ -16,7 +16,7 @@ public class EpisodesDto {
     private String title;
     private String content;
     private Long views;
-    private Boolean free;
+    private boolean free;
     private LocalDateTime registration;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
@@ -26,7 +26,7 @@ public class EpisodesDto {
         this.novelsId = requestAddEpisodes.getNovelsId();
         this.title = requestAddEpisodes.getTitle();
         this.content = requestAddEpisodes.getContent();
-        this.free = requestAddEpisodes.getFree();
+        this.free = requestAddEpisodes.isFree();
         this.registration = requestAddEpisodes.getRegistration();
         this.status = requestAddEpisodes.getStatus();
         this.views = requestAddEpisodes.getViews() == null ? 0L : requestAddEpisodes.getViews();
@@ -37,7 +37,7 @@ public class EpisodesDto {
         this.novelsId = requestUpdateEpisodes.getNovelsId();
         this.title = requestUpdateEpisodes.getTitle();
         this.content = requestUpdateEpisodes.getContent();
-        this.free = requestUpdateEpisodes.getFree();
+        this.free = requestUpdateEpisodes.isFree();
         this.registration = requestUpdateEpisodes.getRegistration();
         this.status = requestUpdateEpisodes.getStatus();
     }
@@ -48,7 +48,7 @@ public class EpisodesDto {
         this.title = episodes.getTitle();
         this.content = episodes.getContent();
         this.views = episodes.getViews();
-        this.free = episodes.getFree();
+        this.free = episodes.isFree();
         this.registration = episodes.getRegistration();
         this.createDate = episodes.getCreateDate();
         this.updateDate = episodes.getUpdateDate();

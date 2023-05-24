@@ -27,8 +27,8 @@ public class Episodes extends BaseTimeEntity {
     private Long novelsId;
     private String title;
     private String content;
-    private Long views;
-    private Boolean free;
+    private long views;
+    private boolean free;
     private LocalDateTime registration;
     private String status;
 
@@ -38,7 +38,7 @@ public class Episodes extends BaseTimeEntity {
         this.title = episodesDto.getTitle();
         this.content = episodesDto.getContent();
         this.views = episodesDto.getViews();
-        this.free = episodesDto.getFree();
+        this.free = episodesDto.isFree();
         this.registration = episodesDto.getRegistration();
         this.status = episodesDto.getStatus();
     }

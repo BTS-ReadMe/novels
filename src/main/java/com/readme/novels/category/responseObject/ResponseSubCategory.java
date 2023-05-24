@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class ResponseSubCategory {
-    private Long id;
+    private long id;
     private String title;
-    private Long mainCategoryId;
+    private long mainCategoryId;
     private String mainCategoryTitle;
 
     public ResponseSubCategory(SubCategoryDto subCategoryDto) {

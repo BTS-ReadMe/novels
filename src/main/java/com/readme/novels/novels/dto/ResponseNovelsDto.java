@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class ResponseNovelsDto {
 
-    private Long id;
+    private long id;
     private String title;
     private String description;
     private String author;

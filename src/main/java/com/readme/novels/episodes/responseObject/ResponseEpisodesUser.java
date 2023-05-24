@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ResponseEpisodesUser {
-    private Long id;
+    private long id;
     private String novelsTitle;
     private String title;
     private String content;

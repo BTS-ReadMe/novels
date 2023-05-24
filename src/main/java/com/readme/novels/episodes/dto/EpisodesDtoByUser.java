@@ -14,7 +14,7 @@ public class EpisodesDtoByUser {
     private String title;
     private String content;
     private Long views;
-    private Boolean free;
+    private boolean free;
     private String registration;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
@@ -26,7 +26,7 @@ public class EpisodesDtoByUser {
         this.title = episodes.getTitle();
         this.content = episodes.getContent();
         this.views = episodes.getViews();
-        this.free = episodes.getFree();
+        this.free = episodes.isFree();
         this.createDate = episodes.getCreateDate();
         this.updateDate = episodes.getUpdateDate();
         this.status = episodes.getStatus();

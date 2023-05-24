@@ -22,7 +22,7 @@ public class NovelsDto {
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;
-    private Integer grade;
+    private int grade;
     private String genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;

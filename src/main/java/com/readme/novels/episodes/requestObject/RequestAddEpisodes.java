@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class RequestAddEpisodes {
 
-    private Long novelsId;
+    private long novelsId;
     private String title;
     private String content;
-    private Boolean free;
+    private boolean free;
     private LocalDateTime registration;
     private String status;
     private Long views;

@@ -6,5 +6,5 @@ import lombok.Getter;
 public class RequestAddSubCategory {
     private String title;
     private boolean deleted;
-    private Long mainCategoryId;
+    private long mainCategoryId;
 }

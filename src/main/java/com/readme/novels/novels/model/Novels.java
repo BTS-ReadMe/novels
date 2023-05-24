@@ -31,7 +31,7 @@ public class Novels extends BaseTimeEntity {
     private String serializationStatus;
     private String thumbnail;
     private String authorComment;
-    private Integer grade;
+    private int grade;
     private String tags;
-    private Long genre;
+    private long genre;
 }

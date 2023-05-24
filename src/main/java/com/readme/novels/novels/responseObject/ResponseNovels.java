@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseNovels {
 
-    private Long id;
+    private long id;
     private String title;
     private String author;
     private String description;
@@ -20,7 +20,7 @@ public class ResponseNovels {
     private String serializationStatus;
     private String authorComment;
     private String genre;
-    private Integer grade;
+    private int grade;
     private List<String> tags;
 
     public ResponseNovels(ResponseNovelsDto responseNovelsDto) {

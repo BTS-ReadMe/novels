@@ -59,6 +59,6 @@ public class NovelsKafkaProducer {
     public void deleteNovels(String topic, Long novelsId) {
 
         kafkaTemplate.send(topic, novelsId.toString());
-        log.info("topic : {}, data : {} ",topic,novelsId.toString());
+        log.info("topic : {}, data : {} ",topic,novelsId);
     }
 }

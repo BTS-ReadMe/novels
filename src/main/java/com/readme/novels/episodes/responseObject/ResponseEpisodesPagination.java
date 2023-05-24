@@ -1,5 +1,6 @@
 package com.readme.novels.episodes.responseObject;
 
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,13 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class ResponseEpisodesPagination {
-    Object contents;
-    Object pagination;
+    Stream<ResponseEpisodes> contents;
+    Pagination pagination;
+
+    public ResponseEpisodesPagination(Stream<ResponseEpisodes> contents, Pagination pagination) {
+        this.contents = contents;
+        this.pagination = pagination;
+    }
 
     @Getter
     @Builder

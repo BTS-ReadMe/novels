@@ -1,20 +1,23 @@
 package com.readme.novels.episodes.responseObject;
 
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class ResponseEpisodesUser {
     private Long id;
+    private String novelsTitle;
     private String title;
     private String content;
-    private LocalDateTime registration;
+    private String registration;
+
+    public ResponseEpisodesUser(EpisodesDtoByUser episodesDtoByUser) {
+        this.id = episodesDtoByUser.getId();
+        this.novelsTitle = episodesDtoByUser.getNovelsTitle();
+        this.title = episodesDtoByUser.getTitle();
+        this.content = episodesDtoByUser.getContent();
+        this.registration = episodesDtoByUser.getRegistration();
+    }
 }

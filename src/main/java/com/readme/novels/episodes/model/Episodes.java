@@ -1,5 +1,6 @@
 package com.readme.novels.episodes.model;
 
+import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.utils.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Episodes extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,4 +31,19 @@ public class Episodes extends BaseTimeEntity {
     private Boolean free;
     private LocalDateTime registration;
     private String status;
+
+    public Episodes(EpisodesDto episodesDto) {
+        this.id = episodesDto.getId();
+        this.novelsId = episodesDto.getNovelsId();
+        this.title = episodesDto.getTitle();
+        this.content = episodesDto.getContent();
+        this.views = episodesDto.getViews();
+        this.free = episodesDto.getFree();
+        this.registration = episodesDto.getRegistration();
+        this.status = episodesDto.getStatus();
+    }
+
+    public Episodes(EpisodesDto episodesDto, Episodes episodes) {
+        super();
+    }
 }

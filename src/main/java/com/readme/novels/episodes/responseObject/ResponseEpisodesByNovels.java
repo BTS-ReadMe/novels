@@ -1,17 +1,10 @@
 package com.readme.novels.episodes.responseObject;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+// 현재는 사용 x
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class ResponseEpisodesByNovels {
     private Long id;
     private String title;

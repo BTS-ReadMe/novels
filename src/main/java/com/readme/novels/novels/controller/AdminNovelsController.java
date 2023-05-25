@@ -1,6 +1,8 @@
 package com.readme.novels.novels.controller;
 
+import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
 import com.readme.novels.novels.dto.NovelsDto;
+import com.readme.novels.novels.dto.NovelsKafkaDto;
 import com.readme.novels.novels.dto.PaginationDto;
 import com.readme.novels.novels.dto.ResponseNovelsDto;
 import com.readme.novels.novels.messagequeue.NovelsKafkaProducer;
@@ -51,7 +53,7 @@ public class AdminNovelsController {
 
         novelsService.addNovels(novelsDto);
 
-        novelsKafkaProducer.addNovels("addNovels", novelsDto);
+        novelsKafkaProducer.addNovels("addNovels", new NovelsKafkaDto(novelsDto));
 
     }
 
@@ -70,7 +72,7 @@ public class AdminNovelsController {
 
         novelsService.updateNovels(novelsDto);
 
-        novelsKafkaProducer.updateNovels("updateNovels", novelsDto);
+        novelsKafkaProducer.updateNovels("updateNovels", new NovelsKafkaDto(novelsDto));
 
     }
 
@@ -85,7 +87,7 @@ public class AdminNovelsController {
     public void deleteNovels(@PathVariable Long id) {
         novelsService.deleteNovels(id);
 
-        novelsKafkaProducer.deleteNovels("deleteNovels", id);
+        novelsKafkaProducer.deleteNovels("deleteNovels", new NovelsDeleteKafkaDto(id));
     }
 
     @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {

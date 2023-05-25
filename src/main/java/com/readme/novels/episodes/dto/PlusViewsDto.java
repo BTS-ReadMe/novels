@@ -4,11 +4,13 @@ import lombok.Getter;
 
 @Getter
 public class PlusViewsDto {
-    private long id;
+    private long episodesId;
     private long novelsId;
+    private long plusCnt;
 
     public PlusViewsDto(EpisodesDtoByUser episodesDto) {
-        this.id = episodesDto.getId();
+        this.episodesId = episodesDto.getId();
         this.novelsId = episodesDto.getNovelsId();
+        this.plusCnt = 1;
     }
 }

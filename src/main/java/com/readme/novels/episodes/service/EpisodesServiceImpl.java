@@ -1,22 +1,22 @@
 package com.readme.novels.episodes.service;
 
 import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodesRepository;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -31,49 +31,50 @@ public class EpisodesServiceImpl implements EpisodesService {
     public void addEpisodes(EpisodesDto episodesDto) {
 
         iNovelsRepository.findById(episodesDto.getNovelsId()).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
 
         Episodes episodes = Episodes.builder()
             .novelsId(episodesDto.getNovelsId())
             .title(episodesDto.getTitle())
             .content(episodesDto.getContent())
-            .views(0L)
-            .free(episodesDto.getFree())
+            .views(episodesDto.getViews())
+            .free(episodesDto.isFree())
             .registration(episodesDto.getRegistration())
             .status(episodesDto.getStatus())
             .build();
 
         Episodes savedEpisodes = episodesRepository.save(episodes);
         episodesDto.setId(savedEpisodes.getId());
-        episodesDto.setViews(0L);
+        episodesDto.setNovelsId(savedEpisodes.getNovelsId());
 
     }
 
     @Override
-    public void updateEpisodes(Long id, EpisodesDto episodesDto) {
-        Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+    public void updateEpisodes(EpisodesDto episodesDto) {
+        Episodes episodes = episodesRepository.findById(episodesDto.getId()).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
 
         Episodes updateEpisodes = Episodes.builder()
-            .id(id)
-            .novelsId(episodes.getNovelsId())
+            .id(episodesDto.getId())
+            .novelsId(episodesDto.getNovelsId())
             .title(episodesDto.getTitle())
             .content(episodesDto.getContent())
             .registration(episodesDto.getRegistration())
-            .free(episodesDto.getFree())
+            .free(episodesDto.isFree())
             .status(episodesDto.getStatus())
             .views(episodes.getViews())
             .build();
 
         episodesRepository.save(updateEpisodes);
+        episodesDto.setViews(episodes.getViews());
     }
 
     @Override
     public void deleteEpisodes(Long id) {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
 
         Episodes deleteEpisode = Episodes.builder()
@@ -81,7 +82,7 @@ public class EpisodesServiceImpl implements EpisodesService {
             .views(episodes.getViews())
             .novelsId(episodes.getNovelsId())
             .status("삭제")
-            .free(episodes.getFree())
+            .free(episodes.isFree())
             .registration(episodes.getRegistration())
             .content(episodes.getContent())
             .title(episodes.getTitle())
@@ -94,21 +95,10 @@ public class EpisodesServiceImpl implements EpisodesService {
     public EpisodesDto getEpisodesById(Long id) {
 
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
 
-        EpisodesDto episodesDto = EpisodesDto.builder()
-            .id(episodes.getId())
-            .content(episodes.getContent())
-            .free(episodes.getFree())
-            .createDate(episodes.getCreateDate())
-            .novelsId(episodes.getNovelsId())
-            .registration(episodes.getRegistration())
-            .status(episodes.getStatus())
-            .title(episodes.getTitle())
-            .views(episodes.getViews())
-            .updateDate(episodes.getUpdateDate())
-            .build();
+        EpisodesDto episodesDto = new EpisodesDto(episodes);
 
         return episodesDto;
     }
@@ -117,7 +107,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     public EpisodesPageDto getEpisodesByNovelsId(Long novelId, Pageable pageable) {
 
         iNovelsRepository.findById(novelId).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 소설입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
 
         Page<Episodes> episodesList
@@ -133,47 +123,31 @@ public class EpisodesServiceImpl implements EpisodesService {
             .build();
 
         episodesList.forEach(episodes -> {
-            EpisodesDto episodesDto = EpisodesDto.builder()
-                .id(episodes.getId())
-                .title(episodes.getTitle())
-                .registration(episodes.getRegistration())
-                .free(episodes.getFree())
-                .novelsId(episodes.getNovelsId())
-                .createDate(episodes.getCreateDate())
-                .views(episodes.getViews())
-                .updateDate(episodes.getUpdateDate())
-                .status(episodes.getStatus())
-                .build();
+            EpisodesDto episodesDto = new EpisodesDto(episodes);
+
             episodesDtoList.add(episodesDto);
         });
 
-        EpisodesPageDto episodesPageDto = EpisodesPageDto.builder()
-            .contents(episodesDtoList)
-            .pagination(pagination)
-            .build();
+        EpisodesPageDto episodesPageDto = new EpisodesPageDto(episodesDtoList, pagination) ;
 
         return episodesPageDto;
     }
 
     @Override
-    public EpisodesDto getEpisodesByUser(Long id) {
+    public EpisodesDtoByUser getEpisodesByUser(Long id) {
 
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
         });
         
-        EpisodesDto episodesDto = EpisodesDto.builder()
-            .id(episodes.getId())
-            .title(episodes.getTitle())
-            .content(episodes.getContent())
-            .registration(episodes.getRegistration())
-            .free(episodes.getFree())
-            .status(episodes.getStatus())
-            .novelsId(episodes.getNovelsId())
-            .views(episodes.getViews())
-            .build();
+        EpisodesDtoByUser episodesDtoByUser = new EpisodesDtoByUser(episodes);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        episodesDtoByUser.setModifiedRegistration(episodes.getRegistration().format(dateTimeFormatter));
 
-        return episodesDto;
+        Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
+        episodesDtoByUser.setNovelsTitle(novels.getTitle());
+
+        return episodesDtoByUser;
     }
 
     @Override
@@ -187,7 +161,7 @@ public class EpisodesServiceImpl implements EpisodesService {
             .views(episodes.getViews()+plusCount)
             .content(episodes.getContent())
             .registration(episodes.getRegistration())
-            .free(episodes.getFree())
+            .free(episodes.isFree())
             .status(episodes.getStatus())
             .novelsId(episodes.getNovelsId())
             .id(episodes.getId())

@@ -18,8 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminNovelsController {
 
     private final NovelsService novelsService;
-    private final Environment env;
     private final NovelsKafkaProducer novelsKafkaProducer;
 
     @Operation(summary = "소설 추가", description = "소설 추가", tags = {"Admin 소설"})
@@ -50,8 +47,7 @@ public class AdminNovelsController {
     })
     @PostMapping
     public void addNovels(@RequestBody RequestAddNovels requestAddNovels) {
-        ModelMapper mapper = new ModelMapper();
-        NovelsDto novelsDto = mapper.map(requestAddNovels, NovelsDto.class);
+        NovelsDto novelsDto = new NovelsDto(requestAddNovels);
 
         novelsService.addNovels(novelsDto);
 
@@ -59,7 +55,8 @@ public class AdminNovelsController {
 
     }
 
-    @Operation(summary = "소설 정보 수정", description = "소설 정보 수정, 수정할 소설 id url 전달", tags = {"Admin 소설"})
+    @Operation(summary = "소설 정보 수정", description = "소설 정보 수정, 수정할 소설 id url 전달", tags = {
+        "Admin 소설"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -69,13 +66,11 @@ public class AdminNovelsController {
     @PutMapping("/{id}")
     public void updateNovels(@RequestBody RequestUpdateNovels requestUpdateNovels,
         @PathVariable Long id) {
-        ModelMapper mapper = new ModelMapper();
-        NovelsDto novelsDto = mapper.map(requestUpdateNovels, NovelsDto.class);
-        novelsDto.setId(id);
+        NovelsDto novelsDto = new NovelsDto(requestUpdateNovels, id);
 
         novelsService.updateNovels(novelsDto);
 
-        novelsKafkaProducer.updateNovels("updateNovels",novelsDto);
+        novelsKafkaProducer.updateNovels("updateNovels", novelsDto);
 
     }
 
@@ -93,7 +88,8 @@ public class AdminNovelsController {
         novelsKafkaProducer.deleteNovels("deleteNovels", id);
     }
 
-    @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {"Admin 소설"})
+    @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {
+        "Admin 소설"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -103,25 +99,14 @@ public class AdminNovelsController {
     @GetMapping("/{id}")
     public ResponseEntity<CommonDataResponse<ResponseNovels>> getNovelsOne(@PathVariable Long id) {
 
-        ResponseNovelsDto novelsDto = novelsService.getNovelsById(id);
+        ResponseNovelsDto responseNovelsDto = novelsService.getNovelsById(id);
 
-        return ResponseEntity.ok().body(new CommonDataResponse(ResponseNovels.builder()
-            .id(novelsDto.getId())
-            .title(novelsDto.getTitle())
-            .author(novelsDto.getAuthor())
-            .description(novelsDto.getDescription())
-            .startDate(novelsDto.getStartDate())
-            .serializationDay(novelsDto.getSerializationDay())
-            .thumbnail(novelsDto.getThumbnail())
-            .serializationStatus(novelsDto.getSerializationStatus())
-            .genre(novelsDto.getGenre())
-            .grade(novelsDto.getGrade())
-            .authorComment(novelsDto.getAuthorComment())
-            .tags(novelsDto.getTags())
-            .build()));
+        return ResponseEntity.ok()
+            .body(new CommonDataResponse<>(new ResponseNovels(responseNovelsDto)));
     }
 
-    @Operation(summary = "소설 목록 조회", description = "소설 목록 조회, 작가, 제목 검색 가능, 10개씩 페이징 처리", tags = {"Admin 소설"})
+    @Operation(summary = "소설 목록 조회", description = "소설 목록 조회, 작가, 제목 검색 가능, 10개씩 페이징 처리", tags = {
+        "Admin 소설"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -145,29 +130,10 @@ public class AdminNovelsController {
         PaginationDto paginationDto = novelsService.getPagination(novelsSearchParamDto);
 
         return ResponseEntity.ok(
-            new CommonDataResponse(ResponseNovelsPagination.builder()
-                .contents(novelsDtoList.stream().map(novelsDto -> ResponseNovels.builder()
-                    .id(novelsDto.getId())
-                    .title(novelsDto.getTitle())
-                    .author(novelsDto.getAuthor())
-                    .description(novelsDto.getDescription())
-                    .startDate(novelsDto.getStartDate())
-                    .serializationDay(novelsDto.getSerializationDay())
-                    .serializationStatus(novelsDto.getSerializationStatus())
-                    .thumbnail(novelsDto.getThumbnail())
-                    .genre(novelsDto.getGenre())
-                    .grade(novelsDto.getGrade())
-                    .authorComment(novelsDto.getAuthorComment())
-                    .tags(novelsDto.getTags())
-                    .build()))
-                .pagination(Pagination.builder()
-                    .page(paginationDto.getPage())
-                    .size(paginationDto.getSize())
-                    .totalElements(paginationDto.getTotalElements())
-                    .totalPage(paginationDto.getTotalPage())
-                    .build()
-                )
-                .build()));
-    };
+            new CommonDataResponse<>(new ResponseNovelsPagination(novelsDtoList.stream()
+                .map(responseNovelsDto -> new ResponseNovels(responseNovelsDto))
+                , new Pagination(paginationDto))));
+
+    }
 
 }

@@ -35,10 +35,8 @@ public class MainCategoryController {
 
         return ResponseEntity.ok(
             new CommonDataResponse(
-                mainCategoryDtoList.stream().map(mainCategoryDto -> ResponseMainCategory.builder()
-                    .id(mainCategoryDto.getId())
-                    .title(mainCategoryDto.getTitle())
-                    .build())
+                mainCategoryDtoList.stream()
+                    .map(mainCategoryDto -> new ResponseMainCategory(mainCategoryDto))
             ));
     }
 

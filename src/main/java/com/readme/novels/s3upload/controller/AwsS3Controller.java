@@ -1,5 +1,6 @@
-package com.readme.novels.novels.aws;
+package com.readme.novels.s3upload.controller;
 
+import com.readme.novels.s3upload.service.AwsS3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

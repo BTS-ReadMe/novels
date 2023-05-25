@@ -1,28 +1,37 @@
 package com.readme.novels.novels.responseObject;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.readme.novels.novels.dto.NovelsDto;
+import com.readme.novels.novels.dto.PaginationDto;
+import com.readme.novels.novels.dto.ResponseNovelsDto;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Setter
 public class ResponseNovelsPagination {
-    Object contents;
-    Object pagination;
+    private Stream<ResponseNovels> contents;
+    private Pagination pagination;
+
+    public ResponseNovelsPagination(Stream<ResponseNovels> contents, Pagination pagination) {
+        this.contents = contents;
+        this.pagination = pagination;
+    }
 
     @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Setter
     public static class Pagination {
         private int page;
         private int size;
         private long totalElements;
         private int totalPage;
+
+        public Pagination(PaginationDto paginationDto) {
+            this.page = paginationDto.getPage();
+            this.size = paginationDto.getSize();
+            this.totalElements = paginationDto.getTotalElements();
+            this.totalPage = paginationDto.getTotalPage();
+        }
     }
 }

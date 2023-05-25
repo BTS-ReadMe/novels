@@ -6,17 +6,14 @@ import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
-import com.readme.novels.episodes.responseObject.ResponseEpisodesByNovels;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination;
 import com.readme.novels.episodes.service.EpisodesService;
-import com.readme.novels.novels.responseObject.ResponseNovelsPagination;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +45,7 @@ public class AdminEpisodesController {
     })
     @PostMapping
     public void addEpisodes(@RequestBody RequestAddEpisodes requestAddEpisodes) {
-        ModelMapper mapper = new ModelMapper();
-        EpisodesDto episodesDto = mapper.map(requestAddEpisodes, EpisodesDto.class);
+        EpisodesDto episodesDto = new EpisodesDto(requestAddEpisodes);
 
         episodesService.addEpisodes(episodesDto);
 
@@ -57,7 +53,8 @@ public class AdminEpisodesController {
 
     }
 
-    @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {"Admin 에피소드"})
+    @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {
+        "Admin 에피소드"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -67,13 +64,12 @@ public class AdminEpisodesController {
     @PutMapping("/{id}")
     public void updateEpisodes(@RequestBody RequestUpdateEpisodes requestUpdateEpisodes,
         @PathVariable Long id) {
-        ModelMapper mapper = new ModelMapper();
-        EpisodesDto episodesDto = mapper.map(requestUpdateEpisodes, EpisodesDto.class);
 
-        episodesService.updateEpisodes(id, episodesDto);
+        EpisodesDto episodesDto = new EpisodesDto(requestUpdateEpisodes, id);
 
-        episodesDto.setId(id);
-        episodesKafkaProducer.updateEpisodes("updateEpisodes",episodesDto);
+        episodesService.updateEpisodes(episodesDto);
+
+        episodesKafkaProducer.updateEpisodes("updateEpisodes", episodesDto);
 
     }
 
@@ -91,7 +87,8 @@ public class AdminEpisodesController {
         episodesKafkaProducer.deleteEpisodes("deleteEpisodes", id);
     }
 
-    @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {"Admin 에피소드"})
+    @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {
+        "Admin 에피소드"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -99,25 +96,19 @@ public class AdminEpisodesController {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<CommonDataResponse<ResponseEpisodes>> getEpisodesById(@PathVariable Long id) {
+    public ResponseEntity<CommonDataResponse<ResponseEpisodes>> getEpisodesById(
+        @PathVariable Long id) {
 
         EpisodesDto episodesDto = episodesService.getEpisodesById(id);
 
-        return ResponseEntity.ok(new CommonDataResponse(
-            ResponseEpisodes.builder()
-                .id(episodesDto.getId())
-                .title(episodesDto.getTitle())
-                .content(episodesDto.getContent())
-                .registration(episodesDto.getRegistration())
-                .free(episodesDto.getFree())
-                .status(episodesDto.getStatus())
-                .createDate(episodesDto.getCreateDate())
-                .updateDate(episodesDto.getUpdateDate())
-                .build()
-        ));
+        return ResponseEntity.ok(
+            new CommonDataResponse<>(
+                new ResponseEpisodes(episodesDto)
+            ));
     }
 
-    @Operation(summary = "에피소드 목록 조회", description = "에피소드 목록 조회, 10개씩 페이징 처리", tags = {"Admin 에피소드"})
+    @Operation(summary = "에피소드 목록 조회", description = "에피소드 목록 조회, 10개씩 페이징 처리", tags = {
+        "Admin 에피소드"})
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -125,30 +116,18 @@ public class AdminEpisodesController {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @GetMapping
-    public ResponseEntity<CommonDataResponse<ResponseEpisodesPagination>> getEpisodesByNovels(@RequestParam Long novelId,
+    public ResponseEntity<CommonDataResponse<ResponseEpisodesPagination>> getEpisodesByNovels(
+        @RequestParam Long novelId,
         @PageableDefault(size = 10) Pageable pageable) {
 
         EpisodesPageDto episodesPageDto = episodesService.getEpisodesByNovelsId(novelId, pageable);
 
         return ResponseEntity.ok(
-            new CommonDataResponse(
-                ResponseNovelsPagination.builder()
-                    .contents(episodesPageDto.getContents().stream().map(episodesDto ->
-                        ResponseEpisodesByNovels.builder()
-                            .id(episodesDto.getId())
-                            .title(episodesDto.getTitle())
-                            .registration(episodesDto.getRegistration())
-                            .free(episodesDto.getFree())
-                            .createDate(episodesDto.getCreateDate())
-                            .updateDate(episodesDto.getUpdateDate())
-                            .status(episodesDto.getStatus())
-                            .build()
-                    ))
-                    .pagination(
-                        episodesPageDto.getPagination()
-                    )
-                    .build()
-            )
+            new CommonDataResponse<>(
+                new ResponseEpisodesPagination(
+                    episodesPageDto.getContents().stream()
+                        .map(episodesDto -> new ResponseEpisodes(episodesDto)),
+                    episodesPageDto.getPagination()))
         );
     }
 

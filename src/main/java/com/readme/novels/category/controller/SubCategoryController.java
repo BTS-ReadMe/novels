@@ -1,7 +1,6 @@
 package com.readme.novels.category.controller;
 
 import com.readme.novels.category.dto.SubCategoryDto;
-import com.readme.novels.category.responseObject.ResponseMainCategory;
 import com.readme.novels.category.responseObject.ResponseSubCategory;
 import com.readme.novels.category.service.SubCategoryService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
@@ -31,19 +30,16 @@ public class SubCategoryController {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @GetMapping
-    public ResponseEntity<CommonDataResponse<ResponseMainCategory>> getSubCategory(
+    public ResponseEntity<CommonDataResponse<ResponseSubCategory>> getSubCategory(
         @RequestParam Long mainCategoryId) {
 
         List<SubCategoryDto> subCategoryDtoList = subCategoryService.getSubCategory(mainCategoryId);
 
         return ResponseEntity.ok(
             new CommonDataResponse(
-                subCategoryDtoList.stream().map(subCategoryDto -> ResponseSubCategory.builder()
-                    .id(subCategoryDto.getId())
-                    .title(subCategoryDto.getTitle())
-                    .mainCategoryId(subCategoryDto.getMainCategoryId())
-                    .mainCategoryTitle(subCategoryDto.getMainCategoryTitle())
-                    .build()))
+                subCategoryDtoList.stream()
+                    .map(subCategoryDto -> new ResponseSubCategory(subCategoryDto)))
+
         );
     }
 }

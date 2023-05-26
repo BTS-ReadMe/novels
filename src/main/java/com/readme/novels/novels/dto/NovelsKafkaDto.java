@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@NoArgsConstructor
+@ToString
 public class NovelsKafkaDto {
 
     private Long id;

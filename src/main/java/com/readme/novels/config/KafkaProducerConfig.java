@@ -3,6 +3,8 @@ package com.readme.novels.config;
 import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
+import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
+import com.readme.novels.novels.dto.NovelsKafkaDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,64 +27,134 @@ public class KafkaProducerConfig {
     private final Environment environment;
 
     @Bean
-    public ProducerFactory<String, Object> ProducerFactory() {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(properties);
-    }
-
-    @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<String, Object>(ProducerFactory());
+    public Map<String, Object> producerConfigs() {
+        return CommonJsonSerializer.getStringObjectMap(environment.getProperty("kafka-config"));
     }
 
     @Bean
     public ProducerFactory<String, EpisodesKafkaDto> EpisodesProducerFactory() {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(properties);
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, EpisodesKafkaDto> EpisodeskafkaTemplate() {
-        return new KafkaTemplate<String, EpisodesKafkaDto>(EpisodesProducerFactory());
+    public KafkaTemplate<String, EpisodesKafkaDto> EpisodesKafkaTemplate() {
+        return new KafkaTemplate<>(EpisodesProducerFactory());
     }
 
     @Bean
     public ProducerFactory<String, EpisodesDeleteKafkaDto> EpisodesDeleteProducerFactory() {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(properties);
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, EpisodesDeleteKafkaDto> EpisodesDeletekafkaTemplate() {
-        return new KafkaTemplate<String, EpisodesDeleteKafkaDto>(EpisodesDeleteProducerFactory());
+    public KafkaTemplate<String, EpisodesDeleteKafkaDto> EpisodesDeleteKafkaTemplate() {
+        return new KafkaTemplate<>(EpisodesDeleteProducerFactory());
     }
 
     @Bean
     public ProducerFactory<String, PlusViewsKafkaDto> EpisodesPlusViewProducerFactory() {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
-        return new DefaultKafkaProducerFactory<>(properties);
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
     public KafkaTemplate<String, PlusViewsKafkaDto> EpisodesPlusViewTemplate() {
-        return new KafkaTemplate<String, PlusViewsKafkaDto>(EpisodesPlusViewProducerFactory());
+        return new KafkaTemplate<>(EpisodesPlusViewProducerFactory());
     }
+
+    @Bean
+    public ProducerFactory<String, NovelsKafkaDto> NovelsProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, NovelsKafkaDto> NovelsKafkaTemplate() {
+        return new KafkaTemplate<>(NovelsProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, NovelsDeleteKafkaDto> NovelsDeleteProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, NovelsDeleteKafkaDto> NovelsDeleteKafkaTemplate() {
+        return new KafkaTemplate<>(NovelsDeleteProducerFactory());
+    }
+
+//    @Bean
+//    public ProducerFactory<String, EpisodesKafkaDto> EpisodesProducerFactory() {
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+//        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//
+//        return new DefaultKafkaProducerFactory<>(properties);
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, EpisodesKafkaDto> EpisodeskafkaTemplate() {
+//        return new KafkaTemplate<String, EpisodesKafkaDto>(EpisodesProducerFactory());
+//    }
+//
+//    @Bean
+//    public ProducerFactory<String, EpisodesDeleteKafkaDto> EpisodesDeleteProducerFactory() {
+//        Map<String, Object> properties = new HashMap<>( );
+//        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+//        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//
+//        return new DefaultKafkaProducerFactory<>(properties);
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, EpisodesDeleteKafkaDto> EpisodesDeletekafkaTemplate() {
+//        return new KafkaTemplate<String, EpisodesDeleteKafkaDto>(EpisodesDeleteProducerFactory());
+//    }
+//
+//    @Bean
+//    public ProducerFactory<String, PlusViewsKafkaDto> EpisodesPlusViewProducerFactory() {
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+//        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//
+//        return new DefaultKafkaProducerFactory<>(properties);
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, PlusViewsKafkaDto> EpisodesPlusViewTemplate() {
+//        return new KafkaTemplate<String, PlusViewsKafkaDto>(EpisodesPlusViewProducerFactory());
+//    }
+//
+//    @Bean
+//    public ProducerFactory<String, NovelsKafkaDto> NovelsProducerFactory() {
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+//        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//
+//        return new DefaultKafkaProducerFactory<>(properties);
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, NovelsKafkaDto> NovelsKafkaTemplate() {
+//        return new KafkaTemplate<String, NovelsKafkaDto>(NovelsProducerFactory());
+//    }
+//
+//    @Bean
+//    public ProducerFactory<String, NovelsDeleteKafkaDto> NovelsDeleteProducerFactory() {
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+//        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//
+//        return new DefaultKafkaProducerFactory<>(properties);
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, NovelsDeleteKafkaDto> NovelsDeleteKafkaTemplate() {
+//        return new KafkaTemplate<String, NovelsDeleteKafkaDto>(NovelsDeleteProducerFactory());
+//    }
 
 
 }

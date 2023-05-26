@@ -3,6 +3,7 @@ package com.readme.novels.episodes.messagequeue;
 import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
+import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

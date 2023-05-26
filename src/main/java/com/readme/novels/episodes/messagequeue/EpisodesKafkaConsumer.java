@@ -22,17 +22,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EpisodesKafkaConsumer {
 
-    private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
-    private static final Map<String, Integer> episodeViewCountMap = new HashMap<>();
-    private static final Map<String, Integer> novelViewCountMap = new HashMap<>();
-    private final EpisodesService episodesService;
-    private final EpisodesKafkaProducer episodesKafkaProducer;
+//    private final KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+//    private static final Map<String, Integer> episodeViewCountMap = new HashMap<>();
+//    private static final Map<String, Integer> novelViewCountMap = new HashMap<>();
+//    private final EpisodesService episodesService;
+//    private final EpisodesKafkaProducer episodesKafkaProducer;
 
-    @KafkaListener(topics = "addEpisodes")
-    public void kafkaEpisodesTest(EpisodesKafkaDto episodesKafkaDto) {
-        log.info("수신 메세지 : " + episodesKafkaDto );
-        log.info("id : " + episodesKafkaDto.getId());
-    }
+//    @KafkaListener(topics = "addEpisodes", groupId = "consumeGroupId")
+//    public void kafkaEpisodesTest(EpisodesKafkaDto episodesKafkaDto) {
+//        log.info("수신 메세지 : " + episodesKafkaDto );
+//        log.info("id : " + episodesKafkaDto.getId());
+//    }
 
 //    @KafkaListener(topics = "updateEpisodes")
 //    public void kafkaEpisodeUpdateTest(EpisodesKafkaDto episodesKafkaDto) {

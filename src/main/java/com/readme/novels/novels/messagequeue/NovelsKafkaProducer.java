@@ -17,44 +17,28 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class NovelsKafkaProducer {
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, NovelsKafkaDto> novelsKafkaTemplate;
+    private final KafkaTemplate<String, NovelsDeleteKafkaDto> novelsDeleteKafkaTemplate;
 
     // topic : addNovels
     public void addNovels(String topic, NovelsKafkaDto novelsKafkaDto) {
-        ObjectMapper mapper = new ObjectMapper();
 
-        // LocalDateTime, Date 객체를 그대로 보내기 위한 설정
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        JsonNode jsonNode = mapper.valueToTree(novelsKafkaDto);
-
-        kafkaTemplate.send(topic, jsonNode);
-        log.info("topic : {}, data : {} ",topic,jsonNode);
+        novelsKafkaTemplate.send(topic, novelsKafkaDto);
+        log.info("topic : {}, data : {} ",topic,novelsKafkaDto);
 
     }
 
     // topic : updateNovels
     public void updateNovels(String topic, NovelsKafkaDto novelsKafkaDto) {
-        ObjectMapper mapper = new ObjectMapper();
 
-        // LocalDateTime, Date 객체를 그대로 보내기 위한 설정
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        JsonNode jsonNode = mapper.valueToTree(novelsKafkaDto);
-
-        kafkaTemplate.send(topic, jsonNode);
-        log.info("topic : {}, data : {} ",topic,jsonNode);
+        novelsKafkaTemplate.send(topic, novelsKafkaDto);
+        log.info("topic : {}, data : {} ",topic,novelsKafkaDto);
     }
 
     // topic : deleteNovels
     public void deleteNovels(String topic, NovelsDeleteKafkaDto novelsDeleteKafkaDto) {
-        ObjectMapper mapper = new ObjectMapper();
 
-        JsonNode jsonNode = mapper.valueToTree(novelsDeleteKafkaDto);
-
-        kafkaTemplate.send(topic, jsonNode);
-        log.info("topic : {}, data : {} ",topic,jsonNode);
+        novelsDeleteKafkaTemplate.send(topic, novelsDeleteKafkaDto);
+        log.info("topic : {}, data : {} ",topic,novelsDeleteKafkaDto);
     }
 }

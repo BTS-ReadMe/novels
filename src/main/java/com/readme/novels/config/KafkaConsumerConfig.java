@@ -1,6 +1,8 @@
 package com.readme.novels.config;
 
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
+import com.readme.novels.novels.dto.NovelsKafkaDto;
+import com.readme.novels.novels.messagequeue.NovelsKafkaConsumer;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +47,7 @@ public class KafkaConsumerConfig {
 //    }
 
     @Bean
-    public ConsumerFactory<String, EpisodesKafkaDto> consumerFactory() {
+    public ConsumerFactory<String, EpisodesKafkaDto> episodesConsumerFactory() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumeGroupId");
@@ -60,13 +62,36 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EpisodesKafkaDto> kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, EpisodesKafkaDto> kafkaEpisodesListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, EpisodesKafkaDto> kafkaListenerContainerFactory
             = new ConcurrentKafkaListenerContainerFactory<>();
-        kafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
+        kafkaListenerContainerFactory.setConsumerFactory(episodesConsumerFactory());
 
         return kafkaListenerContainerFactory;
     }
 
+    @Bean
+    public ConsumerFactory<String, NovelsKafkaDto> novelsConsumerFactory() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumeGroupId2");
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, Object.class);
+
+        return new DefaultKafkaConsumerFactory<>(
+            properties,
+            new StringDeserializer(),
+            new ErrorHandlingDeserializer<>(new JsonDeserializer<>(NovelsKafkaDto.class))
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, NovelsKafkaDto> novelsListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, NovelsKafkaDto> kafkaListenerContainerFactory
+            = new ConcurrentKafkaListenerContainerFactory<>();
+        kafkaListenerContainerFactory.setConsumerFactory(novelsConsumerFactory());
+
+        return kafkaListenerContainerFactory;
+    }
 
 }

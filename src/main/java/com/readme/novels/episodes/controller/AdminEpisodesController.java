@@ -1,6 +1,8 @@
 package com.readme.novels.episodes.controller;
 
+import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesDto;
+import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
@@ -49,7 +51,7 @@ public class AdminEpisodesController {
 
         episodesService.addEpisodes(episodesDto);
 
-        episodesKafkaProducer.addEpisodes("addEpisodes", episodesDto);
+        episodesKafkaProducer.addEpisodes("addEpisodes", new EpisodesKafkaDto(episodesDto));
 
     }
 
@@ -69,7 +71,7 @@ public class AdminEpisodesController {
 
         episodesService.updateEpisodes(episodesDto);
 
-        episodesKafkaProducer.updateEpisodes("updateEpisodes", episodesDto);
+        episodesKafkaProducer.updateEpisodes("updateEpisodes", new EpisodesKafkaDto(episodesDto));
 
     }
 
@@ -84,7 +86,7 @@ public class AdminEpisodesController {
     public void deleteEpisodes(@PathVariable Long id) {
         episodesService.deleteEpisodes(id);
 
-        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", id);
+        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", new EpisodesDeleteKafkaDto(id));
     }
 
     @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {

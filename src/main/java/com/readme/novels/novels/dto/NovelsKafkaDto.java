@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class NovelsKafkaDto {
 
-    private Long id;
+    private Long novelId;
     private String title;
     private String description;
     private String author;
@@ -26,7 +26,7 @@ public class NovelsKafkaDto {
     private List<String> tags;
 
     public NovelsKafkaDto(NovelsDto novelsDto) {
-        this.id = novelsDto.getId();
+        this.novelId = novelsDto.getId();
         this.title = novelsDto.getTitle();
         this.description = novelsDto.getDescription();
         this.author = novelsDto.getAuthor();

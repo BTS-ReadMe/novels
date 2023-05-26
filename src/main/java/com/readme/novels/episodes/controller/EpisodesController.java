@@ -1,7 +1,7 @@
 package com.readme.novels.episodes.controller;
 
 import com.readme.novels.episodes.dto.EpisodesDtoByUser;
-import com.readme.novels.episodes.dto.PlusViewsDto;
+import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesUser;
 import com.readme.novels.episodes.service.EpisodesService;
@@ -37,8 +37,8 @@ public class EpisodesController {
         EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id);
 
         // 조회수 증가 topic 전송
-        PlusViewsDto plusViewsDto = new PlusViewsDto(episodesDtoByUser);
-        episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsDto);
+        PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto(episodesDtoByUser);
+        episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsKafkaDto);
 
         return ResponseEntity.ok(
             new CommonDataResponse<>(

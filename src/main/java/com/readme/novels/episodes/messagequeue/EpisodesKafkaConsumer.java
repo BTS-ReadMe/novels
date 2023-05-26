@@ -2,8 +2,12 @@ package com.readme.novels.episodes.messagequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
+import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.service.EpisodesService;
+import io.swagger.v3.core.util.Json;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,25 @@ public class EpisodesKafkaConsumer {
     private static final Map<String, Integer> novelViewCountMap = new HashMap<>();
     private final EpisodesService episodesService;
     private final EpisodesKafkaProducer episodesKafkaProducer;
+
+    @KafkaListener(topics = "addEpisodes")
+    public void kafkaEpisodesTest(EpisodesKafkaDto episodesKafkaDto) {
+        log.info("수신 메세지 : " + episodesKafkaDto );
+        log.info("id : " + episodesKafkaDto.getId());
+    }
+
+//    @KafkaListener(topics = "updateEpisodes")
+//    public void kafkaEpisodeUpdateTest(EpisodesKafkaDto episodesKafkaDto) {
+//        log.info("수신 메세지 : " + episodesKafkaDto );
+//        log.info("id : " + episodesKafkaDto.getId());
+//    }
+//
+//    @KafkaListener(topics = "deleteEpisodes")
+//    public void kafkaEpisodeDeleteTest(EpisodesDeleteKafkaDto episodesDeleteKafkaDto) {
+//        log.info("수신 메세지 : " + episodesDeleteKafkaDto );
+//        log.info("id : " + episodesDeleteKafkaDto.getId());
+//    }
+
 
 //    @KafkaListener(id = "viewCountListener", topics = "plusViewCount")
 //    public void saveViewCount(String kafkaMessage) {

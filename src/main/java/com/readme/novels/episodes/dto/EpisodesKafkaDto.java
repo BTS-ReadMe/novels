@@ -2,8 +2,12 @@ package com.readme.novels.episodes.dto;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@NoArgsConstructor
+@ToString
 public class EpisodesKafkaDto {
     private Long id;
     private Long novelsId;

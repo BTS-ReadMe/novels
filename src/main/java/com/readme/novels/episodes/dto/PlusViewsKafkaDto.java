@@ -8,13 +8,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class PlusViewsKafkaDto {
-    private long episodesId;
-    private long novelsId;
+    private long episodeId;
+    private long novelId;
     private long plusCnt;
 
     public PlusViewsKafkaDto(EpisodesDtoByUser episodesDto) {
-        this.episodesId = episodesDto.getId();
-        this.novelsId = episodesDto.getNovelsId();
+        this.episodeId = episodesDto.getId();
+        this.novelId = episodesDto.getNovelsId();
         this.plusCnt = 1;
     }
 }

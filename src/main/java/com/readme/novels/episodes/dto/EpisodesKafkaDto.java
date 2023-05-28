@@ -9,7 +9,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class EpisodesKafkaDto {
-    private Long id;
+    private Long episodeId;
     private Long novelsId;
     private String title;
     private boolean free;
@@ -17,7 +17,7 @@ public class EpisodesKafkaDto {
     private String status;
 
     public EpisodesKafkaDto(EpisodesDto episodesDto) {
-        this.id = episodesDto.getId();
+        this.episodeId = episodesDto.getId();
         this.novelsId = episodesDto.getNovelsId();
         this.title = episodesDto.getTitle();
         this.free = episodesDto.isFree();

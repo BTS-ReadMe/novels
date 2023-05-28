@@ -8,9 +8,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class EpisodesDeleteKafkaDto {
-    private long id;
+    private long episodeId;
 
     public EpisodesDeleteKafkaDto(long id) {
-        this.id = id;
+        this.episodeId = id;
     }
 }

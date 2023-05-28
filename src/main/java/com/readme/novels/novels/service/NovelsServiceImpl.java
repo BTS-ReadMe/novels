@@ -35,11 +35,10 @@ public class NovelsServiceImpl implements NovelsService {
         StringBuilder serialization = new StringBuilder();
         serializationDays.forEach(item -> serialization.append(item).append(","));
 
+
+        List<String> tags = novelsDto.getTags();
         StringBuffer tagString = new StringBuffer();
-        if (novelsDto.getTags() != null) {
-            List<String> tags = novelsDto.getTags();
-            tags.forEach(item -> tagString.append(item).append(","));
-        }
+        tags.forEach(item -> tagString.append(item).append(","));
 
 
         MainCategory mainCategory = mainCategoryRepository.findByTitle(novelsDto.getGenre())
@@ -58,8 +57,7 @@ public class NovelsServiceImpl implements NovelsService {
             .startDate(novelsDto.getStartDate())
             .serializationStatus(novelsDto.getSerializationStatus())
             .description(novelsDto.getDescription())
-//            .tags(tagString.toString().substring(0, tagString.length() - 1))
-            .tags(tagString.toString())
+            .tags(tagString.toString().substring(0, tagString.length() - 1))
             .build();
 
         Novels savedNovels = iNovelsRepository.save(novels);

@@ -19,4 +19,6 @@ public interface EpisodesService {
     EpisodesDtoByUser getEpisodesByUser(Long id);
 
     void plusViewsCount(Long id, Integer plusCount);
+
+    void addEpisodeHistory(Long id, String uuid);
 }

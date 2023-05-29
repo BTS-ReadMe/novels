@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class EpisodesKafkaDto {
     private Long episodeId;
-    private Long novelsId;
+    private Long novelId;
     private String title;
     private boolean free;
     private LocalDateTime registration;
@@ -18,7 +18,7 @@ public class EpisodesKafkaDto {
 
     public EpisodesKafkaDto(EpisodesDto episodesDto) {
         this.episodeId = episodesDto.getId();
-        this.novelsId = episodesDto.getNovelsId();
+        this.novelId = episodesDto.getNovelsId();
         this.title = episodesDto.getTitle();
         this.free = episodesDto.isFree();
         this.registration = episodesDto.getRegistration();

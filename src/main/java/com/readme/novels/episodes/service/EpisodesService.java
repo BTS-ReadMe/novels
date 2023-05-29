@@ -10,7 +10,7 @@ public interface EpisodesService {
 
     void updateEpisodes(EpisodesDto episodesDto);
 
-    void deleteEpisodes(Long id);
+    long deleteEpisodes(Long id);
 
     EpisodesDto getEpisodesById(Long id);
 

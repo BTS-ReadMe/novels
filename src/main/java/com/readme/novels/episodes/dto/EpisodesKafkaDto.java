@@ -1,6 +1,8 @@
 package com.readme.novels.episodes.dto;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,7 +15,7 @@ public class EpisodesKafkaDto {
     private Long novelId;
     private String title;
     private boolean free;
-    private LocalDateTime registration;
+    private Date registration;
     private String status;
 
     public EpisodesKafkaDto(EpisodesDto episodesDto) {
@@ -21,7 +23,7 @@ public class EpisodesKafkaDto {
         this.novelId = episodesDto.getNovelsId();
         this.title = episodesDto.getTitle();
         this.free = episodesDto.isFree();
-        this.registration = episodesDto.getRegistration();
+        this.registration = Date.from(episodesDto.getRegistration().atZone(ZoneId.systemDefault()).toInstant());
         this.status = episodesDto.getStatus();
     }
 }

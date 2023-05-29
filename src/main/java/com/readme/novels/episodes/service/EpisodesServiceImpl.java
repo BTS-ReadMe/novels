@@ -178,21 +178,4 @@ public class EpisodesServiceImpl implements EpisodesService {
 
     }
 
-    @Override
-    public void addEpisodeHistory(Long id, String uuid) {
-        Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        });
-
-        Optional<EpisodeHistory> episodeHistory = episodeHistoryRepository.findByUuidAndNovelId(uuid, episodes.getNovelsId());
-
-        if (episodeHistory.isEmpty()) {
-            EpisodeHistory newEpisodeHistory = new EpisodeHistory(uuid, episodes.getNovelsId(), episodes.getId());
-            episodeHistoryRepository.save(newEpisodeHistory);
-        } else {
-            episodeHistory.get().setEpisodeId(episodes.getId());
-            episodeHistoryRepository.save(episodeHistory.get());
-        }
-
-    }
 }

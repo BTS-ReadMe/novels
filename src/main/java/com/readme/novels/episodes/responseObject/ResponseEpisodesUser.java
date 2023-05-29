@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString
 public class ResponseEpisodesUser {
     private long id;
+    private long novelId;
     private String novelsTitle;
     private String title;
     private String content;
@@ -15,6 +16,7 @@ public class ResponseEpisodesUser {
 
     public ResponseEpisodesUser(EpisodesDtoByUser episodesDtoByUser) {
         this.id = episodesDtoByUser.getId();
+        this.novelId = episodesDtoByUser.getNovelsId();
         this.novelsTitle = episodesDtoByUser.getNovelsTitle();
         this.title = episodesDtoByUser.getTitle();
         this.content = episodesDtoByUser.getContent();

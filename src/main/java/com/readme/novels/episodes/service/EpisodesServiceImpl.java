@@ -72,7 +72,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public void deleteEpisodes(Long id) {
+    public long deleteEpisodes(Long id) {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
@@ -89,6 +89,8 @@ public class EpisodesServiceImpl implements EpisodesService {
             .build();
 
         episodesRepository.save(deleteEpisode);
+
+        return deleteEpisode.getNovelsId();
     }
 
     @Override

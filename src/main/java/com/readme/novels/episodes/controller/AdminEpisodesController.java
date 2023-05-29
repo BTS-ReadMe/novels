@@ -84,9 +84,9 @@ public class AdminEpisodesController {
     })
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
-        episodesService.deleteEpisodes(id);
+        long novelId = episodesService.deleteEpisodes(id);
 
-        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", new EpisodesDeleteKafkaDto(id));
+        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", new EpisodesDeleteKafkaDto(id, novelId));
     }
 
     @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {

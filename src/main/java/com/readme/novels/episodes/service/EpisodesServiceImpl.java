@@ -3,7 +3,9 @@ package com.readme.novels.episodes.service;
 import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
+import com.readme.novels.episodes.model.EpisodeHistory;
 import com.readme.novels.episodes.model.Episodes;
+import com.readme.novels.episodes.repository.EpisodeHistoryRepository;
 import com.readme.novels.episodes.repository.EpisodesRepository;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.novels.model.Novels;
@@ -11,6 +13,7 @@ import com.readme.novels.novels.repository.INovelsRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,7 @@ public class EpisodesServiceImpl implements EpisodesService {
 
     private final EpisodesRepository episodesRepository;
     private final INovelsRepository iNovelsRepository;
+    private final EpisodeHistoryRepository episodeHistoryRepository;
 
     @Override
     public void addEpisodes(EpisodesDto episodesDto) {
@@ -130,7 +134,7 @@ public class EpisodesServiceImpl implements EpisodesService {
             episodesDtoList.add(episodesDto);
         });
 
-        EpisodesPageDto episodesPageDto = new EpisodesPageDto(episodesDtoList, pagination) ;
+        EpisodesPageDto episodesPageDto = new EpisodesPageDto(episodesDtoList, pagination);
 
         return episodesPageDto;
     }
@@ -141,10 +145,11 @@ public class EpisodesServiceImpl implements EpisodesService {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
         });
-        
+
         EpisodesDtoByUser episodesDtoByUser = new EpisodesDtoByUser(episodes);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        episodesDtoByUser.setModifiedRegistration(episodes.getRegistration().format(dateTimeFormatter));
+        episodesDtoByUser.setModifiedRegistration(
+            episodes.getRegistration().format(dateTimeFormatter));
 
         Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
         episodesDtoByUser.setNovelsTitle(novels.getTitle());
@@ -160,7 +165,7 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         Episodes updateEpisodes = Episodes.builder()
             .title(episodes.getTitle())
-            .views(episodes.getViews()+plusCount)
+            .views(episodes.getViews() + plusCount)
             .content(episodes.getContent())
             .registration(episodes.getRegistration())
             .free(episodes.isFree())
@@ -172,4 +177,5 @@ public class EpisodesServiceImpl implements EpisodesService {
         episodesRepository.save(updateEpisodes);
 
     }
+
 }

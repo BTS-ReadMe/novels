@@ -13,7 +13,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class NovelsApplication {
 
     public static void main(String[] args) {
+        setDefaultTimeZone();
         SpringApplication.run(NovelsApplication.class, args);
     }
 
+    private static void setDefaultTimeZone() {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Seoul"));
+    }
 }

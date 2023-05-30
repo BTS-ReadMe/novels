@@ -5,6 +5,7 @@ import com.readme.novels.episodes.dto.EpisodeHistoryPaginationDto;
 import com.readme.novels.episodes.responseObject.ResponseEpisodeHistory;
 import com.readme.novels.episodes.responseObject.ResponseEpisodeHistoryPagination;
 import com.readme.novels.episodes.service.EpisodeHistoryService;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,8 @@ public class EpisodeHistoryController {
 
         return ResponseEntity.ok(new CommonDataResponse<>(
             new ResponseEpisodeHistoryPagination(
-            episodeHistoryPaginationDto.getContents().stream().map(ResponseEpisodeHistory::new),
+            episodeHistoryPaginationDto.getContents().stream().map(ResponseEpisodeHistory::new).collect(
+                Collectors.toList()),
             episodeHistoryPaginationDto.getPagination())
         ));
     }

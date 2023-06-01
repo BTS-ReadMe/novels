@@ -153,7 +153,6 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
         episodesDtoByUser.setNovelsTitle(novels.getTitle());
-        episodesDtoByUser.setNovelThumbnail(novels.getThumbnail());
 
         return episodesDtoByUser;
     }

@@ -19,7 +19,6 @@ public class EpisodesDtoByUser {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private String status;
-    private String thumbnail;
 
     public EpisodesDtoByUser(Episodes episodes) {
         this.id = episodes.getId();
@@ -37,7 +36,4 @@ public class EpisodesDtoByUser {
         this.registration = registration;
     }
 
-    public void setNovelThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
 }

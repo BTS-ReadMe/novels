@@ -26,4 +26,12 @@ public class NovelsController {
 
         return ResponseEntity.ok(new CommonDataResponse<>(new ResponseNovelMain(novelMainDto)));
     }
+
+    @GetMapping("/event")
+    public ResponseEntity<CommonDataResponse<ResponseNovelMain>> getMainEventNovel() {
+        NovelMainDto novelMainDto = novelMainService.getMainEventNovel();
+
+        return ResponseEntity.ok(new CommonDataResponse<>(new ResponseNovelMain(novelMainDto)));
+    }
+
 }

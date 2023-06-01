@@ -24,4 +24,14 @@ public class NovelMainServiceImpl implements NovelMainService {
         return new NovelMainDto(novelMain);
 
     }
+
+    @Override
+    public NovelMainDto getMainEventNovel() {
+        long id = 2L;
+        NovelMain novelMain = novelMainRepository.findById(id).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        });
+
+        return new NovelMainDto(novelMain);
+    }
 }

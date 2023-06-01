@@ -5,4 +5,6 @@ import com.readme.novels.novels.dto.NovelMainDto;
 public interface NovelMainService {
 
     NovelMainDto getMainNovel();
+
+    NovelMainDto getMainEventNovel();
 }

@@ -85,7 +85,7 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
         EpisodeHistory episodeHistory = episodeHistoryRepository
             .findByUuidAndEpisodeId(updateReadAtDto.getUuid(), updateReadAtDto.getEpisodeId())
             .orElseThrow(() -> {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             });
 
         episodeHistory.setReadAt(updateReadAtDto.getReadAt());

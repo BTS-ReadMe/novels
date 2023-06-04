@@ -11,4 +11,5 @@ public interface EpisodeHistoryRepository extends JpaRepository<EpisodeHistory, 
 
     Page<EpisodeHistory> findByUuidOrderByUpdateDateDesc(String uuid, Pageable pageable);
 
+    Boolean existsByIdAndUuid(Long id, String uuid);
 }

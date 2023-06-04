@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -66,5 +67,15 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
             episodeHistoryDtoList, pagination);
 
         return episodeHistoryPaginationDto;
+    }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeHistoryByUser(String uuid, Long historyId) {
+        if (episodeHistoryRepository.existsByIdAndUuid(historyId, uuid)) {
+            episodeHistoryRepository.deleteById(historyId);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

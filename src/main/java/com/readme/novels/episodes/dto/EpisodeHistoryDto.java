@@ -17,6 +17,7 @@ public class EpisodeHistoryDto {
     private Long novelId;
     private Long episodeId;
     private LocalDateTime createDate;
+    private Long readAt;
 
     public EpisodeHistoryDto(EpisodeHistory episodeHistory) {
         this.id = episodeHistory.getId();
@@ -24,5 +25,6 @@ public class EpisodeHistoryDto {
         this.novelId = episodeHistory.getNovelId();
         this.episodeId = episodeHistory.getEpisodeId();
         this.createDate = episodeHistory.getCreateDate();
+        this.readAt = episodeHistory.getReadAt() != null ? episodeHistory.getReadAt() : 0L;
     }
 }

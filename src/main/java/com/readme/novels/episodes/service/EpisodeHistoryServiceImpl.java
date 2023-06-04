@@ -2,6 +2,7 @@ package com.readme.novels.episodes.service;
 
 import com.readme.novels.episodes.dto.EpisodeHistoryDto;
 import com.readme.novels.episodes.dto.EpisodeHistoryPaginationDto;
+import com.readme.novels.episodes.dto.UpdateReadAtDto;
 import com.readme.novels.episodes.model.EpisodeHistory;
 import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodeHistoryRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -66,5 +68,27 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
             episodeHistoryDtoList, pagination);
 
         return episodeHistoryPaginationDto;
+    }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeHistoryByUser(String uuid, Long historyId) {
+        if (episodeHistoryRepository.existsByIdAndUuid(historyId, uuid)) {
+            episodeHistoryRepository.deleteById(historyId);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void updateEpisodeReadAt(UpdateReadAtDto updateReadAtDto) {
+        EpisodeHistory episodeHistory = episodeHistoryRepository
+            .findByUuidAndEpisodeId(updateReadAtDto.getUuid(), updateReadAtDto.getEpisodeId())
+            .orElseThrow(() -> {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            });
+
+        episodeHistory.setReadAt(updateReadAtDto.getReadAt());
+        episodeHistoryRepository.save(episodeHistory);
     }
 }

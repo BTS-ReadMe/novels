@@ -15,6 +15,7 @@ public class ResponseEpisodeHistory {
     private Long novelId;
     private Long episodeId;
     private LocalDateTime createDate;
+    private Long readAt;
 
     public ResponseEpisodeHistory(EpisodeHistoryDto episodeHistoryDto) {
         this.id = episodeHistoryDto.getId();
@@ -22,5 +23,6 @@ public class ResponseEpisodeHistory {
         this.novelId = episodeHistoryDto.getNovelId();
         this.episodeId = episodeHistoryDto.getEpisodeId();
         this.createDate = episodeHistoryDto.getCreateDate();
+        this.readAt = episodeHistoryDto.getReadAt();
     }
 }

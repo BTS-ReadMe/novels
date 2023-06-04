@@ -2,6 +2,8 @@ package com.readme.novels.episodes.controller;
 
 import com.readme.novels.commonResponseObject.CommonDataResponse;
 import com.readme.novels.episodes.dto.EpisodeHistoryPaginationDto;
+import com.readme.novels.episodes.dto.UpdateReadAtDto;
+import com.readme.novels.episodes.requestObject.RequestUpdateReadAt;
 import com.readme.novels.episodes.responseObject.ResponseEpisodeHistory;
 import com.readme.novels.episodes.responseObject.ResponseEpisodeHistoryPagination;
 import com.readme.novels.episodes.service.EpisodeHistoryService;
@@ -11,12 +13,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +67,12 @@ public class EpisodeHistoryController {
     public void deleteEpisodeHistoryByUser(@RequestHeader("uuid") String uuid, @PathVariable Long historyId) {
         episodeHistoryService.deleteEpisodeHistoryByUser(uuid, historyId);
 
+    }
+
+    @PatchMapping
+    public void updateHistoryReadAt(@RequestHeader("uuid") String uuid,
+        @RequestBody RequestUpdateReadAt requestUpdateReadAt) {
+        episodeHistoryService.updateEpisodeReadAt(new UpdateReadAtDto(uuid, requestUpdateReadAt));
     }
 
 }

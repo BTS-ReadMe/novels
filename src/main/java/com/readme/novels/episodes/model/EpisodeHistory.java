@@ -25,7 +25,7 @@ public class EpisodeHistory extends BaseTimeEntity {
     private String uuid;
     private Long novelId;
     private Long episodeId;
-    // private Long readAt; 읽은 위치? 페이지? 줄수? 나중에 추가
+    private Long readAt;
 
 
     public EpisodeHistory(String uuid, Long novelId, Long episodeId) {

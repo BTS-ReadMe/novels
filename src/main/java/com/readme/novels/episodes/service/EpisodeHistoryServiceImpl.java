@@ -2,6 +2,7 @@ package com.readme.novels.episodes.service;
 
 import com.readme.novels.episodes.dto.EpisodeHistoryDto;
 import com.readme.novels.episodes.dto.EpisodeHistoryPaginationDto;
+import com.readme.novels.episodes.dto.UpdateReadAtDto;
 import com.readme.novels.episodes.model.EpisodeHistory;
 import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodeHistoryRepository;
@@ -77,5 +78,17 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public void updateEpisodeReadAt(UpdateReadAtDto updateReadAtDto) {
+        EpisodeHistory episodeHistory = episodeHistoryRepository
+            .findByUuidAndEpisodeId(updateReadAtDto.getUuid(), updateReadAtDto.getEpisodeId())
+            .orElseThrow(() -> {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            });
+
+        episodeHistory.setReadAt(updateReadAtDto.getReadAt());
+        episodeHistoryRepository.save(episodeHistory);
     }
 }

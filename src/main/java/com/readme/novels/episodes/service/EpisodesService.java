@@ -16,7 +16,7 @@ public interface EpisodesService {
 
     EpisodesPageDto getEpisodesByNovelsId(Long novelId, Pageable pageable);
 
-    EpisodesDtoByUser getEpisodesByUser(Long id);
+    EpisodesDtoByUser getEpisodesByUser(Long id, Pageable pageable);
 
     void plusViewsCount(Long id, Integer plusCount);
 

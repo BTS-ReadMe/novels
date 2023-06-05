@@ -1,7 +1,9 @@
 package com.readme.novels.episodes.dto;
 
 import com.readme.novels.episodes.model.Episodes;
+import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,19 +14,19 @@ public class EpisodesDtoByUser {
     private Long novelsId;
     private String novelsTitle;
     private String title;
-    private String content;
+    private List<String> content;
     private Long views;
     private boolean free;
     private String registration;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private String status;
+    private Pagination pagination;
 
     public EpisodesDtoByUser(Episodes episodes) {
         this.id = episodes.getId();
         this.novelsId = episodes.getNovelsId();
         this.title = episodes.getTitle();
-        this.content = episodes.getContent();
         this.views = episodes.getViews();
         this.free = episodes.isFree();
         this.createDate = episodes.getCreateDate();

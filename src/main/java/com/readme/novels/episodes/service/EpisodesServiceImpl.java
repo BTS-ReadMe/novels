@@ -12,8 +12,11 @@ import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -140,7 +143,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public EpisodesDtoByUser getEpisodesByUser(Long id) {
+    public EpisodesDtoByUser getEpisodesByUser(Long id, Pageable pageable) {
 
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
@@ -150,6 +153,34 @@ public class EpisodesServiceImpl implements EpisodesService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         episodesDtoByUser.setModifiedRegistration(
             episodes.getRegistration().format(dateTimeFormatter));
+
+        // content 페이징 처리
+        String regex = "(<p>.*?</p>)";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(episodes.getContent());
+
+        List<String> contentList = new ArrayList<>();
+        while (matcher.find()) {
+            String content = matcher.group(1);
+            contentList.add(content);
+        }
+
+        int page = pageable.getPageNumber();
+        int size = 10;
+        int totalPage = (int)Math.ceil((double)contentList.size()/size);
+        int startIndex = page*10;
+        int endIndex = Math.min(startIndex+size, contentList.size());
+        Pagination pagination = Pagination.builder()
+            .totalPage(totalPage)
+            .totalElements(contentList.size())
+            .size(size)
+            .page(page)
+            .build();
+
+        List<String> pageContentList = contentList.subList(startIndex, endIndex);
+        episodesDtoByUser.setContent(pageContentList);
+        episodesDtoByUser.setPagination(pagination);
 
         Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
         episodesDtoByUser.setNovelsTitle(novels.getTitle());

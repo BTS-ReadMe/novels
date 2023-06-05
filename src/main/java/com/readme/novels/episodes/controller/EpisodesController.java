@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,9 +39,10 @@ public class EpisodesController {
     @GetMapping("/{id}")
     public ResponseEntity<CommonDataResponse<ResponseEpisodesUser>> getEpisodes(
         @PathVariable Long id,
-        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid) {
+        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid,
+        @PageableDefault(size = 10) Pageable pageable) {
 
-        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id);
+        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id, pageable);
 
         // 조회수 증가 topic 전송
         PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto(episodesDtoByUser);

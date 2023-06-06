@@ -39,10 +39,9 @@ public class EpisodesController {
     @GetMapping("/{id}")
     public ResponseEntity<CommonDataResponse<ResponseEpisodesUser>> getEpisodes(
         @PathVariable Long id,
-        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid,
-        @PageableDefault(size = 10) Pageable pageable) {
+        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid) {
 
-        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id, pageable);
+        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id);
 
         // 조회수 증가 topic 전송
         PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto(episodesDtoByUser);

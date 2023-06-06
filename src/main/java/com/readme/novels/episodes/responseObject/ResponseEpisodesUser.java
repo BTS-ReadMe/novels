@@ -13,9 +13,8 @@ public class ResponseEpisodesUser {
     private long novelId;
     private String novelsTitle;
     private String title;
-    private List<String> content;
+    private String content;
     private String registration;
-    private Pagination pagination;
 
     public ResponseEpisodesUser(EpisodesDtoByUser episodesDtoByUser) {
         this.id = episodesDtoByUser.getId();
@@ -24,6 +23,5 @@ public class ResponseEpisodesUser {
         this.title = episodesDtoByUser.getTitle();
         this.content = episodesDtoByUser.getContent();
         this.registration = episodesDtoByUser.getRegistration();
-        this.pagination = episodesDtoByUser.getPagination();
     }
 }

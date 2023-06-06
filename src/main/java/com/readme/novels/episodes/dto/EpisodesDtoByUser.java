@@ -14,14 +14,13 @@ public class EpisodesDtoByUser {
     private Long novelsId;
     private String novelsTitle;
     private String title;
-    private List<String> content;
+    private String content;
     private Long views;
     private boolean free;
     private String registration;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private String status;
-    private Pagination pagination;
 
     public EpisodesDtoByUser(Episodes episodes) {
         this.id = episodes.getId();
@@ -32,6 +31,7 @@ public class EpisodesDtoByUser {
         this.createDate = episodes.getCreateDate();
         this.updateDate = episodes.getUpdateDate();
         this.status = episodes.getStatus();
+        this.content = episodes.getContent();
     }
 
     public void setModifiedRegistration(String registration) {

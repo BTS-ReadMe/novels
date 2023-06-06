@@ -143,7 +143,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public EpisodesDtoByUser getEpisodesByUser(Long id, Pageable pageable) {
+    public EpisodesDtoByUser getEpisodesByUser(Long id) {
 
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");

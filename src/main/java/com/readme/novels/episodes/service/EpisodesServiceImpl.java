@@ -154,33 +154,33 @@ public class EpisodesServiceImpl implements EpisodesService {
         episodesDtoByUser.setModifiedRegistration(
             episodes.getRegistration().format(dateTimeFormatter));
 
-        // content 페이징 처리
-        String regex = "(<p>.*?</p>)";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(episodes.getContent());
-
-        List<String> contentList = new ArrayList<>();
-        while (matcher.find()) {
-            String content = matcher.group(1);
-            contentList.add(content);
-        }
-
-        int page = pageable.getPageNumber();
-        int size = 10;
-        int totalPage = (int)Math.ceil((double)contentList.size()/size);
-        int startIndex = page*10;
-        int endIndex = Math.min(startIndex+size, contentList.size());
-        Pagination pagination = Pagination.builder()
-            .totalPage(totalPage)
-            .totalElements(contentList.size())
-            .size(size)
-            .page(page)
-            .build();
-
-        List<String> pageContentList = contentList.subList(startIndex, endIndex);
-        episodesDtoByUser.setContent(pageContentList);
-        episodesDtoByUser.setPagination(pagination);
+//        // content 페이징 처리
+//        String regex = "(<p>.*?</p>)";
+//
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(episodes.getContent());
+//
+//        List<String> contentList = new ArrayList<>();
+//        while (matcher.find()) {
+//            String content = matcher.group(1);
+//            contentList.add(content);
+//        }
+//
+//        int page = pageable.getPageNumber();
+//        int size = 10;
+//        int totalPage = (int)Math.ceil((double)contentList.size()/size);
+//        int startIndex = page*10;
+//        int endIndex = Math.min(startIndex+size, contentList.size());
+//        Pagination pagination = Pagination.builder()
+//            .totalPage(totalPage)
+//            .totalElements(contentList.size())
+//            .size(size)
+//            .page(page)
+//            .build();
+//
+//        List<String> pageContentList = contentList.subList(startIndex, endIndex);
+//        episodesDtoByUser.setContent(pageContentList);
+//        episodesDtoByUser.setPagination(pagination);
 
         Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
         episodesDtoByUser.setNovelsTitle(novels.getTitle());

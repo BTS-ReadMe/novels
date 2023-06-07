@@ -18,4 +18,6 @@ public interface EpisodeHistoryService {
     void updateEpisodeReadAt(UpdateReadAtDto updateReadAtDto);
 
     List<EpisodeHistoryDto> getReadEpisodeByNovelId(String uuid, Long novelId);
+
+    void deleteEpisodeById(Long id);
 }

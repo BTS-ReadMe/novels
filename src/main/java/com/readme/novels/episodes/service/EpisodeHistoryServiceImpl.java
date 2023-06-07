@@ -110,4 +110,10 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
 
         return episodeHistoryDtoList;
     }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeById(Long id) {
+        episodeHistoryRepository.deleteById(id);
+    }
 }

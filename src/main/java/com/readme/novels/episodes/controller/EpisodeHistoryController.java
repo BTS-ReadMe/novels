@@ -75,12 +75,26 @@ public class EpisodeHistoryController {
 
     }
 
+    @Operation(summary = "읽은 페이지 저장", description = "어디까지 읽었는지 읽은 페이지 저장", tags = {"읽은 내역"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @PatchMapping
     public void updateHistoryReadAt(@RequestHeader("uuid") String uuid,
         @RequestBody RequestUpdateReadAt requestUpdateReadAt) {
         episodeHistoryService.updateEpisodeReadAt(new UpdateReadAtDto(uuid, requestUpdateReadAt));
     }
 
+    @Operation(summary = "소설 별 읽은 에피소드 조회", description = "소설별로 유저가 읽은 에피소드 조회", tags = {"읽은 내역"})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+        @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
     @GetMapping("/novel/{novelId}")
     public ResponseEntity<CommonDataResponse<List<ResponseEpisodeHistory>>> getReadEpisodeByNovelId(
         @RequestHeader(value = "uuid") String uuid, @PathVariable Long novelId) {

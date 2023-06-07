@@ -24,4 +24,6 @@ public interface EpisodeHistoryRepository extends JpaRepository<EpisodeHistory, 
         "WHERE e.uuid = :uuid " +
         "GROUP BY e.novelId")
     Page<EpisodeRecentHistoryDto> findRecentEpisodeIdsByUuid(@Param("uuid") String uuid, Pageable pageable);
+
+    Boolean existsByUuidAndEpisodeId(String uuid, Long episode);
 }

@@ -16,6 +16,13 @@ public class ResponseEpisodesUser {
     private String content;
     private String registration;
 
+    private long prevId;
+    private boolean prevFree;
+    private boolean prevRead;
+    private long nextId;
+    private boolean nextFree;
+    private boolean nextRead;
+
     public ResponseEpisodesUser(EpisodesDtoByUser episodesDtoByUser) {
         this.id = episodesDtoByUser.getId();
         this.novelId = episodesDtoByUser.getNovelsId();
@@ -23,5 +30,11 @@ public class ResponseEpisodesUser {
         this.title = episodesDtoByUser.getTitle();
         this.content = episodesDtoByUser.getContent();
         this.registration = episodesDtoByUser.getRegistration();
+        this.prevId = episodesDtoByUser.getPrevId();
+        this.prevFree = episodesDtoByUser.isPrevFree();
+        this.prevRead = episodesDtoByUser.isPrevRead();
+        this.nextId = episodesDtoByUser.getNextId();
+        this.nextFree = episodesDtoByUser.isNextFree();
+        this.nextRead = episodesDtoByUser.isNextRead();
     }
 }

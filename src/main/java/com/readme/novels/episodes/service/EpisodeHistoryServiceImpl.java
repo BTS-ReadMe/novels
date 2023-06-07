@@ -41,7 +41,7 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
 
         if (episodeHistory.isEmpty()) {
             EpisodeHistory newEpisodeHistory = new EpisodeHistory(uuid, episodes.getNovelsId(),
-                episodes.getId());
+                episodes.getId(), episodes.isFree());
             episodeHistoryRepository.save(newEpisodeHistory);
         }
     }

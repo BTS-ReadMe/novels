@@ -26,11 +26,13 @@ public class EpisodeHistory extends BaseTimeEntity {
     private Long novelId;
     private Long episodeId;
     private Long readAt;
+    private Boolean free;
 
 
-    public EpisodeHistory(String uuid, Long novelId, Long episodeId) {
+    public EpisodeHistory(String uuid, Long novelId, Long episodeId, boolean free) {
         this.uuid = uuid;
         this.novelId = novelId;
         this.episodeId = episodeId;
+        this.free = free;
     }
 }

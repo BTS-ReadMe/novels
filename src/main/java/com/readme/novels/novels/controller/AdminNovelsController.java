@@ -1,5 +1,6 @@
 package com.readme.novels.novels.controller;
 
+import com.readme.novels.episodes.service.EpisodeHistoryService;
 import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
 import com.readme.novels.novels.dto.NovelsDto;
 import com.readme.novels.novels.dto.NovelsKafkaDto;
@@ -39,6 +40,7 @@ public class AdminNovelsController {
 
     private final NovelsService novelsService;
     private final NovelsKafkaProducer novelsKafkaProducer;
+    private final EpisodeHistoryService episodeHistoryService;
 
     @Operation(summary = "소설 추가", description = "소설 추가", tags = {"Admin 소설"})
     @ApiResponses({
@@ -88,6 +90,8 @@ public class AdminNovelsController {
         novelsService.deleteNovels(id);
 
         novelsKafkaProducer.deleteNovels("deleteNovels", new NovelsDeleteKafkaDto(id));
+
+        episodeHistoryService.deleteEpisodeByNovelsId(id);
     }
 
     @Operation(summary = "소설 단건 조회", description = "소설 단건 조회, 조회할 소설 id url 전달", tags = {

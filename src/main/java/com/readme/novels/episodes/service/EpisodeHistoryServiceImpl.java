@@ -114,6 +114,12 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
     @Transactional
     @Override
     public void deleteEpisodeById(Long id) {
-        episodeHistoryRepository.deleteById(id);
+        episodeHistoryRepository.deleteByEpisodeId(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeByNovelsId(long id) {
+        episodeHistoryRepository.deleteByNovelId(id);
     }
 }

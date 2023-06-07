@@ -3,6 +3,8 @@ package com.readme.novels.config;
 import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
+import com.readme.novels.messageQueue.GetPurchasedInfoProducer;
+import com.readme.novels.messageQueue.dto.GetPurchasedInfoResultDto;
 import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
 import com.readme.novels.novels.dto.NovelsKafkaDto;
 import java.util.HashMap;
@@ -79,6 +81,20 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, NovelsDeleteKafkaDto> NovelsDeleteKafkaTemplate() {
         return new KafkaTemplate<>(NovelsDeleteProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, Object> getPurchasedInfoResultDtoProducerFactory(){
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("kafka-config"));
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(properties);
+    }
+
+    @Bean
+    public KafkaTemplate<String, Object> getPurchasedInfoResultDtoKafkaTemplate() {
+        return new KafkaTemplate<>(getPurchasedInfoResultDtoProducerFactory());
     }
 
 //    @Bean

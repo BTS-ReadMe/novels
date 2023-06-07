@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface EpisodeHistoryRepository extends JpaRepository<EpisodeHistory, Long> {
-    Optional<EpisodeHistory> findByUuidAndNovelId(String uuid, long novelId);
+    List<EpisodeHistory> findByUuidAndNovelId(String uuid, long novelId);
 
     Page<EpisodeHistory> findByUuidOrderByUpdateDateDesc(String uuid, Pageable pageable);
 

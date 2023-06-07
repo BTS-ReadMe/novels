@@ -94,4 +94,20 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
         episodeHistory.setReadAt(updateReadAtDto.getReadAt());
         episodeHistoryRepository.save(episodeHistory);
     }
+
+    @Override
+    public List<EpisodeHistoryDto> getReadEpisodeByNovelId(String uuid, Long novelId) {
+
+        List<EpisodeHistory> episodeHistoryList
+            = episodeHistoryRepository.findByUuidAndNovelId(uuid, novelId);
+
+        List<EpisodeHistoryDto> episodeHistoryDtoList = new ArrayList<>();
+
+        episodeHistoryList.forEach(episodeHistory -> {
+            EpisodeHistoryDto episodeHistoryDto = new EpisodeHistoryDto(episodeHistory);
+            episodeHistoryDtoList.add(episodeHistoryDto);
+        });
+
+        return episodeHistoryDtoList;
+    }
 }

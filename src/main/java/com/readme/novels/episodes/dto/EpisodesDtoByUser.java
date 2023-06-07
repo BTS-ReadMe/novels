@@ -22,6 +22,13 @@ public class EpisodesDtoByUser {
     private LocalDateTime updateDate;
     private String status;
 
+    private long prevId;
+    private boolean prevFree;
+    private boolean prevRead;
+    private long nextId;
+    private boolean nextFree;
+    private boolean nextRead;
+
     public EpisodesDtoByUser(Episodes episodes) {
         this.id = episodes.getId();
         this.novelsId = episodes.getNovelsId();

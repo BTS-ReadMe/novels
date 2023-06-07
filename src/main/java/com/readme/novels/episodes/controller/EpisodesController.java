@@ -41,7 +41,7 @@ public class EpisodesController {
         @PathVariable Long id,
         @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid) {
 
-        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(id);
+        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(uuid, id);
 
         // 조회수 증가 topic 전송
         PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto(episodesDtoByUser);

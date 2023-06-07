@@ -2,6 +2,7 @@ package com.readme.novels.episodes.service;
 
 import com.readme.novels.episodes.dto.EpisodeHistoryDto;
 import com.readme.novels.episodes.dto.EpisodeHistoryPaginationDto;
+import com.readme.novels.episodes.dto.EpisodeRecentHistoryDto;
 import com.readme.novels.episodes.dto.UpdateReadAtDto;
 import com.readme.novels.episodes.model.EpisodeHistory;
 import com.readme.novels.episodes.model.Episodes;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
 
     private final EpisodeHistoryRepository episodeHistoryRepository;
@@ -32,27 +35,30 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
 
-        Optional<EpisodeHistory> episodeHistory = episodeHistoryRepository.findByUuidAndNovelId(
-            uuid, episodes.getNovelsId());
+        // uuid랑 episode id로 조회
+        Optional<EpisodeHistory> episodeHistory = episodeHistoryRepository.findByUuidAndEpisodeId(
+            uuid, episodes.getId());
 
         if (episodeHistory.isEmpty()) {
             EpisodeHistory newEpisodeHistory = new EpisodeHistory(uuid, episodes.getNovelsId(),
-                episodes.getId());
+                episodes.getId(), episodes.isFree());
             episodeHistoryRepository.save(newEpisodeHistory);
-        } else {
-            episodeHistory.get().setEpisodeId(episodes.getId());
-            episodeHistoryRepository.save(episodeHistory.get());
         }
     }
 
     @Override
     public EpisodeHistoryPaginationDto getEpisodeHistoryByUser(String uuid, Pageable pageable) {
-        Page<EpisodeHistory> episodeHistoryPage = episodeHistoryRepository
-            .findByUuidOrderByUpdateDateDesc(uuid, pageable);
+//        Page<EpisodeHistory> episodeHistoryPage = episodeHistoryRepository
+//            .findByUuidOrderByUpdateDateDesc(uuid, pageable);
 
+        Page<EpisodeRecentHistoryDto> episodeHistoryPage = episodeHistoryRepository
+            .findRecentEpisodeIdsByUuid(uuid, pageable);
         List<EpisodeHistoryDto> episodeHistoryDtoList = new ArrayList<>();
 
-        episodeHistoryPage.forEach(episodeHistory -> {
+        episodeHistoryPage.forEach(dto -> {
+            EpisodeHistory episodeHistory = episodeHistoryRepository
+                .findByUuidAndEpisodeId(uuid, dto.getEpisodeId()).get();
+
             EpisodeHistoryDto episodeHistoryDto = new EpisodeHistoryDto(episodeHistory);
             episodeHistoryDtoList.add(episodeHistoryDto);
         });
@@ -64,10 +70,7 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
             .totalPage(episodeHistoryPage.getTotalPages())
             .build();
 
-        EpisodeHistoryPaginationDto episodeHistoryPaginationDto = new EpisodeHistoryPaginationDto(
-            episodeHistoryDtoList, pagination);
-
-        return episodeHistoryPaginationDto;
+        return new EpisodeHistoryPaginationDto(episodeHistoryDtoList, pagination);
     }
 
     @Transactional
@@ -90,5 +93,33 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
 
         episodeHistory.setReadAt(updateReadAtDto.getReadAt());
         episodeHistoryRepository.save(episodeHistory);
+    }
+
+    @Override
+    public List<EpisodeHistoryDto> getReadEpisodeByNovelId(String uuid, Long novelId) {
+
+        List<EpisodeHistory> episodeHistoryList
+            = episodeHistoryRepository.findByUuidAndNovelId(uuid, novelId);
+
+        List<EpisodeHistoryDto> episodeHistoryDtoList = new ArrayList<>();
+
+        episodeHistoryList.forEach(episodeHistory -> {
+            EpisodeHistoryDto episodeHistoryDto = new EpisodeHistoryDto(episodeHistory);
+            episodeHistoryDtoList.add(episodeHistoryDto);
+        });
+
+        return episodeHistoryDtoList;
+    }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeById(Long id) {
+        episodeHistoryRepository.deleteByEpisodeId(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteEpisodeByNovelsId(long id) {
+        episodeHistoryRepository.deleteByNovelId(id);
     }
 }

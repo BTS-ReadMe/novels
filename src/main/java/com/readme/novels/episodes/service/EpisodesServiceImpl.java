@@ -143,7 +143,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public EpisodesDtoByUser getEpisodesByUser(Long id) {
+    public EpisodesDtoByUser getEpisodesByUser(String uuid, Long id) {
 
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 에피소드 입니다.");
@@ -184,6 +184,29 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         Novels novels = iNovelsRepository.findById(episodes.getNovelsId()).get();
         episodesDtoByUser.setNovelsTitle(novels.getTitle());
+
+        // 다음화
+        Episodes nextEpisode = null;
+        if (episodesRepository.findFirstByNovelsIdAndIdGreaterThanOrderByIdAsc(novels.getId(),episodes.getId()).isPresent()) {
+            nextEpisode = episodesRepository
+                .findFirstByNovelsIdAndIdGreaterThanOrderByIdAsc(novels.getId(),episodes.getId()).get();
+
+            episodesDtoByUser.setNextId(nextEpisode.getId());
+            episodesDtoByUser.setNextFree(nextEpisode.isFree());
+            episodesDtoByUser.setNextRead(episodeHistoryRepository
+                .existsByUuidAndEpisodeId(uuid, nextEpisode.getId()));
+        }
+        // 이전화
+        Episodes prevEpisode = null;
+        if (episodesRepository.findFirstByNovelsIdAndIdLessThanOrderByIdDesc(novels.getId(),episodes.getId()).isPresent()) {
+            prevEpisode = episodesRepository
+                .findFirstByNovelsIdAndIdLessThanOrderByIdDesc(novels.getId(),episodes.getId()).get();
+
+            episodesDtoByUser.setPrevId(prevEpisode.getId());
+            episodesDtoByUser.setPrevFree(prevEpisode.isFree());
+            episodesDtoByUser.setPrevRead(episodeHistoryRepository
+                .existsByUuidAndEpisodeId(uuid, prevEpisode.getId()));
+        }
 
         return episodesDtoByUser;
     }

@@ -5,6 +5,7 @@ import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
+import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
@@ -12,6 +13,7 @@ import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination;
 import com.readme.novels.episodes.service.EpisodeHistoryService;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
+import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,6 +41,7 @@ public class AdminEpisodesController {
     private final EpisodesService episodesService;
     private final EpisodesKafkaProducer episodesKafkaProducer;
     private final EpisodeHistoryService episodeHistoryService;
+    private final EmitterRepository emitterRepository;
 
     @Operation(summary = "에피소드 추가", description = "에피소드 추가", tags = {"Admin 에피소드"})
     @ApiResponses({
@@ -55,6 +58,7 @@ public class AdminEpisodesController {
 
         episodesKafkaProducer.addEpisodes("addEpisodes", new EpisodesKafkaDto(episodesDto));
 
+        emitterRepository.save(episodesDto.getId() + "_" + episodesDto.getTitle());
     }
 
     @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {
@@ -86,11 +90,15 @@ public class AdminEpisodesController {
     })
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
-        long novelId = episodesService.deleteEpisodes(id);
+        Episodes episodes = episodesService.deleteEpisodes(id);
+        long novelId = episodes.getNovelsId();
 
-        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", new EpisodesDeleteKafkaDto(id, novelId));
+        episodesKafkaProducer.deleteEpisodes("deleteEpisodes",
+            new EpisodesDeleteKafkaDto(id, novelId));
 
         episodeHistoryService.deleteEpisodeById(id);
+
+        emitterRepository.deleteById(id + "_" + episodes.getTitle());
     }
 
     @Operation(summary = "에피소드 단건 조회", description = "에피소드 단건 조회, 조회할 에피소드 id url 전달", tags = {

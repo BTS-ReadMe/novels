@@ -3,8 +3,6 @@ package com.readme.novels.config;
 import com.readme.novels.episodes.dto.EpisodesDeleteKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
-import com.readme.novels.messageQueue.GetPurchasedInfoProducer;
-import com.readme.novels.messageQueue.dto.GetPurchasedInfoResultDto;
 import com.readme.novels.novels.dto.NovelsDeleteKafkaDto;
 import com.readme.novels.novels.dto.NovelsKafkaDto;
 import java.util.HashMap;
@@ -19,7 +17,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @EnableKafka
 @Configuration

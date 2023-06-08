@@ -1,6 +1,7 @@
-package com.readme.novels.messageQueue;
+package com.readme.novels.messageQueue.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.readme.novels.messageQueue.producer.GetPurchasedInfoProducer;
 import com.readme.novels.messageQueue.dto.EpisodeNovelDto;
 import com.readme.novels.messageQueue.dto.GetPurchasedInfoDto;
 import com.readme.novels.novels.repository.INovelsRepository;

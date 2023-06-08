@@ -1,4 +1,4 @@
-package com.readme.novels.messageQueue;
+package com.readme.novels.messageQueue.producer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.readme.novels.messageQueue.dto.EpisodeNovelDto;

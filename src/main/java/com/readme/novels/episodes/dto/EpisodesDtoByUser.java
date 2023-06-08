@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Getter
 @Setter
@@ -28,6 +29,8 @@ public class EpisodesDtoByUser {
     private long nextId;
     private boolean nextFree;
     private boolean nextRead;
+
+    private SseEmitter emitter;
 
     public EpisodesDtoByUser(Episodes episodes) {
         this.id = episodes.getId();

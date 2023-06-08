@@ -187,9 +187,9 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         // 다음화
         Episodes nextEpisode = null;
-        if (episodesRepository.findFirstByNovelsIdAndIdGreaterThanOrderByIdAsc(novels.getId(),episodes.getId()).isPresent()) {
+        if (episodesRepository.findFirstByNovelsIdAndRegistrationGreaterThanOrderByRegistrationAsc(novels.getId(),episodes.getRegistration()).isPresent()) {
             nextEpisode = episodesRepository
-                .findFirstByNovelsIdAndIdGreaterThanOrderByIdAsc(novels.getId(),episodes.getId()).get();
+                .findFirstByNovelsIdAndRegistrationGreaterThanOrderByRegistrationAsc(novels.getId(),episodes.getRegistration()).get();
 
             episodesDtoByUser.setNextId(nextEpisode.getId());
             episodesDtoByUser.setNextFree(nextEpisode.isFree());
@@ -198,9 +198,9 @@ public class EpisodesServiceImpl implements EpisodesService {
         }
         // 이전화
         Episodes prevEpisode = null;
-        if (episodesRepository.findFirstByNovelsIdAndIdLessThanOrderByIdDesc(novels.getId(),episodes.getId()).isPresent()) {
+        if (episodesRepository.findFirstByNovelsIdAndRegistrationLessThanOrderByRegistrationDesc(novels.getId(),episodes.getRegistration()).isPresent()) {
             prevEpisode = episodesRepository
-                .findFirstByNovelsIdAndIdLessThanOrderByIdDesc(novels.getId(),episodes.getId()).get();
+                .findFirstByNovelsIdAndRegistrationLessThanOrderByRegistrationDesc(novels.getId(),episodes.getRegistration()).get();
 
             episodesDtoByUser.setPrevId(prevEpisode.getId());
             episodesDtoByUser.setPrevFree(prevEpisode.isFree());

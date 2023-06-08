@@ -51,9 +51,6 @@ public class EpisodesServiceImpl implements EpisodesService {
         Episodes savedEpisodes = episodesRepository.save(episodes);
         episodesDto.setId(savedEpisodes.getId());
         episodesDto.setNovelsId(savedEpisodes.getNovelsId());
-
-
-        emitterRepository.save(episodesDto.getId());
     }
 
     @Override
@@ -95,8 +92,6 @@ public class EpisodesServiceImpl implements EpisodesService {
             .build();
 
         episodesRepository.save(deleteEpisode);
-
-        emitterRepository.deleteById(deleteEpisode.getId());
 
         return deleteEpisode;
     }

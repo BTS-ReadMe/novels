@@ -13,24 +13,24 @@ public class SseEmitterRepository implements EmitterRepository {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Override
-    public SseEmitter save(String episodeId) { // addEpisodes
+    public SseEmitter save(String id) { // addEpisodes
         SseEmitter emitter = new SseEmitter();
-        emitters.put(episodeId, emitter);
+        emitters.put(id, emitter);
         return emitter;
     }
 
     @Override
-    public SseEmitter findById(String episodeId) {
-        if (emitters.containsKey(episodeId)) {
-            return emitters.get(episodeId);
+    public SseEmitter findById(String id) {
+        if (emitters.containsKey(id)) {
+            return emitters.get(id);
         } else {
             return null;
         }
     }
 
     @Override
-    public void deleteById(String episodeId) { //deleteEpisode
-        emitters.get(episodeId).complete();
-        emitters.remove(episodeId);
+    public void deleteById(String id) { //deleteEpisode
+        emitters.get(id).complete();
+        emitters.remove(id);
     }
 }

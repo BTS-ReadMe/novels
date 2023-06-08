@@ -10,6 +10,8 @@ import com.readme.novels.episodes.repository.EpisodesRepository;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
+import com.readme.novels.sseEmitter.repository.EmitterRepository;
+import com.readme.novels.sseEmitter.repository.SseEmitterRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +35,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     private final EpisodesRepository episodesRepository;
     private final INovelsRepository iNovelsRepository;
     private final EpisodeHistoryRepository episodeHistoryRepository;
+    private final EmitterRepository emitterRepository;
 
     @Override
     public void addEpisodes(EpisodesDto episodesDto) {
@@ -55,6 +58,8 @@ public class EpisodesServiceImpl implements EpisodesService {
         episodesDto.setId(savedEpisodes.getId());
         episodesDto.setNovelsId(savedEpisodes.getNovelsId());
 
+
+        emitterRepository.save(episodesDto.getId() + "_" + episodesDto.getTitle());
     }
 
     @Override
@@ -96,6 +101,8 @@ public class EpisodesServiceImpl implements EpisodesService {
             .build();
 
         episodesRepository.save(deleteEpisode);
+
+        emitterRepository.deleteById(deleteEpisode.getId() + "_" + deleteEpisode.getTitle());
 
         return deleteEpisode;
     }
@@ -150,6 +157,9 @@ public class EpisodesServiceImpl implements EpisodesService {
         });
 
         EpisodesDtoByUser episodesDtoByUser = new EpisodesDtoByUser(episodes);
+
+        episodesDtoByUser.setEmitter(emitterRepository.findById(id + "_" + episodes.getTitle()));
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         episodesDtoByUser.setModifiedRegistration(
             episodes.getRegistration().format(dateTimeFormatter));

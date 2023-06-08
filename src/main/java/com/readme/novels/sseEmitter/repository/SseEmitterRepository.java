@@ -10,17 +10,17 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class SseEmitterRepository implements EmitterRepository {
 
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Override
-    public SseEmitter save(String id) { // addEpisodes
+    public SseEmitter save(Long id) { // addEpisodes
         SseEmitter emitter = new SseEmitter();
         emitters.put(id, emitter);
         return emitter;
     }
 
     @Override
-    public SseEmitter findById(String id) {
+    public SseEmitter findById(Long id) {
         if (emitters.containsKey(id)) {
             return emitters.get(id);
         } else {
@@ -29,7 +29,7 @@ public class SseEmitterRepository implements EmitterRepository {
     }
 
     @Override
-    public void deleteById(String id) { //deleteEpisode
+    public void deleteById(Long id) { //deleteEpisode
         emitters.get(id).complete();
         emitters.remove(id);
     }

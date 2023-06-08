@@ -59,7 +59,7 @@ public class EpisodesServiceImpl implements EpisodesService {
         episodesDto.setNovelsId(savedEpisodes.getNovelsId());
 
 
-        emitterRepository.save(episodesDto.getId() + "_" + episodesDto.getTitle());
+        emitterRepository.save(episodesDto.getId());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         episodesRepository.save(deleteEpisode);
 
-        emitterRepository.deleteById(deleteEpisode.getId() + "_" + deleteEpisode.getTitle());
+        emitterRepository.deleteById(deleteEpisode.getId());
 
         return deleteEpisode;
     }
@@ -158,7 +158,7 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         EpisodesDtoByUser episodesDtoByUser = new EpisodesDtoByUser(episodes);
 
-        episodesDtoByUser.setEmitter(emitterRepository.findById(id + "_" + episodes.getTitle()));
+        episodesDtoByUser.setEmitter(emitterRepository.findById(id));
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         episodesDtoByUser.setModifiedRegistration(

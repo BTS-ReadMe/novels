@@ -22,7 +22,6 @@ public class GetEmojiStatusConsumer {
         EmojiStatusDto emojiStatusDto = mapper.readValue(kafkaMessage, EmojiStatusDto.class);
 
         SseEmitter emitter = emitterRepository.findById(emojiStatusDto.getEpisodeId());
-        String message = mapper.writeValueAsString(emojiStatusDto);
-        emitter.send(SseEmitter.event().data(message).name("emojiStatus"));
+        emitter.send(SseEmitter.event().data(emojiStatusDto).name("emojiStatus"));
     }
 }

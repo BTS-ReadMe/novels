@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 @RequestMapping("/v1/episodes")
 @RequiredArgsConstructor
+@Slf4j
 public class EpisodesController {
 
     private final EpisodesService episodesService;
@@ -67,6 +69,7 @@ public class EpisodesController {
 
     @GetMapping("/getEmitter/{id}")
     public SseEmitter getEmitter(@PathVariable Long id) {
+        log.info("컨트롤러");
         return emitterRepository.findById(id);
     }
 }

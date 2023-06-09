@@ -5,10 +5,12 @@ import com.readme.novels.messageQueue.dto.EmojiStatusDto;
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GetEmojiStatusConsumer {
@@ -21,7 +23,11 @@ public class GetEmojiStatusConsumer {
 
         EmojiStatusDto emojiStatusDto = mapper.readValue(kafkaMessage, EmojiStatusDto.class);
 
+        log.info("before");
+
         SseEmitter emitter = emitterRepository.findById(emojiStatusDto.getEpisodeId());
         emitter.send(SseEmitter.event().data(emojiStatusDto).name("emojiStatus"));
+
+        log.info("after");
     }
 }

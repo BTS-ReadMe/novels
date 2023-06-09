@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s3")
+@Slf4j
 public class AwsS3Controller {
 
     private final AwsS3Service awsS3Service;
@@ -29,6 +31,8 @@ public class AwsS3Controller {
     })
     @PutMapping("/file")
     public ResponseEntity<String> uploadFile(@RequestPart MultipartFile multipartFile) {
+
+        log.info("사진 등록!! 컨트롤러 진입!");
         return ResponseEntity.ok().body(awsS3Service.uploadFile(multipartFile));
     }
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,8 @@ public class AwsS3Controller {
         @ApiResponse(responseCode = "404", description = "NOT FOUND"),
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
-    @GetMapping("/file")
-    public ResponseEntity<String> uploadFile(@RequestPart MultipartFile multipartFile) {
+    @PutMapping("/file")
+    public ResponseEntity<String> uploadFile(@ModelAttribute MultipartFile multipartFile) {
 
         log.info("사진 등록!! 컨트롤러 진입!");
         return ResponseEntity.ok().body(awsS3Service.uploadFile(multipartFile));

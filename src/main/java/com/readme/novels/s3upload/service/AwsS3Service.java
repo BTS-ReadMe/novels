@@ -33,12 +33,17 @@ public class AwsS3Service {
         objectMetadata.setContentLength(multipartFile.getSize());
         objectMetadata.setContentType(multipartFile.getContentType());
 
+        log.info("사진 등록!! 서비스 진입!");
+
         try (InputStream inputStream = multipartFile.getInputStream()) {
+            log.info("사진 등록!! 등록전!");
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+            log.info("사진 등록!! 등록후!");
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패 했습니다");
         }
+
 
         String returnFileName = s3Path+fileName;
 

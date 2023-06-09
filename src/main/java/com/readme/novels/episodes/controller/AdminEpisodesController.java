@@ -5,6 +5,7 @@ import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesKafkaDto;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
+import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.requestObject.RequestAddEpisodes;
 import com.readme.novels.episodes.requestObject.RequestUpdateEpisodes;
 import com.readme.novels.episodes.responseObject.ResponseEpisodes;
@@ -54,7 +55,6 @@ public class AdminEpisodesController {
         episodesService.addEpisodes(episodesDto);
 
         episodesKafkaProducer.addEpisodes("addEpisodes", new EpisodesKafkaDto(episodesDto));
-
     }
 
     @Operation(summary = "에피소드 수정", description = "에피소드 수정, 수정할 에피소드 id url 전달", tags = {
@@ -86,9 +86,11 @@ public class AdminEpisodesController {
     })
     @DeleteMapping("/{id}")
     public void deleteEpisodes(@PathVariable Long id) {
-        long novelId = episodesService.deleteEpisodes(id);
+        Episodes episodes = episodesService.deleteEpisodes(id);
+        long novelId = episodes.getNovelsId();
 
-        episodesKafkaProducer.deleteEpisodes("deleteEpisodes", new EpisodesDeleteKafkaDto(id, novelId));
+        episodesKafkaProducer.deleteEpisodes("deleteEpisodes",
+            new EpisodesDeleteKafkaDto(id, novelId));
 
         episodeHistoryService.deleteEpisodeById(id);
     }

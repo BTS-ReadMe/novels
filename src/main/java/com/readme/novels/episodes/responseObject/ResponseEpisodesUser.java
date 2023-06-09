@@ -5,6 +5,7 @@ import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagi
 import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Getter
 @ToString
@@ -23,6 +24,8 @@ public class ResponseEpisodesUser {
     private boolean nextFree;
     private boolean nextRead;
 
+    private SseEmitter emitter;
+
     public ResponseEpisodesUser(EpisodesDtoByUser episodesDtoByUser) {
         this.id = episodesDtoByUser.getId();
         this.novelId = episodesDtoByUser.getNovelsId();
@@ -36,5 +39,6 @@ public class ResponseEpisodesUser {
         this.nextId = episodesDtoByUser.getNextId();
         this.nextFree = episodesDtoByUser.isNextFree();
         this.nextRead = episodesDtoByUser.isNextRead();
+        this.emitter = episodesDtoByUser.getEmitter();
     }
 }

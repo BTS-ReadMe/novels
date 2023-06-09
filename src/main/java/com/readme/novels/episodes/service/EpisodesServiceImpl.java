@@ -3,20 +3,16 @@ package com.readme.novels.episodes.service;
 import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
-import com.readme.novels.episodes.model.EpisodeHistory;
 import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodeHistoryRepository;
 import com.readme.novels.episodes.repository.EpisodesRepository;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
+import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,6 +29,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     private final EpisodesRepository episodesRepository;
     private final INovelsRepository iNovelsRepository;
     private final EpisodeHistoryRepository episodeHistoryRepository;
+    private final EmitterRepository emitterRepository;
 
     @Override
     public void addEpisodes(EpisodesDto episodesDto) {
@@ -54,7 +51,6 @@ public class EpisodesServiceImpl implements EpisodesService {
         Episodes savedEpisodes = episodesRepository.save(episodes);
         episodesDto.setId(savedEpisodes.getId());
         episodesDto.setNovelsId(savedEpisodes.getNovelsId());
-
     }
 
     @Override
@@ -79,7 +75,7 @@ public class EpisodesServiceImpl implements EpisodesService {
     }
 
     @Override
-    public long deleteEpisodes(Long id) {
+    public Episodes deleteEpisodes(Long id) {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         });
@@ -97,7 +93,7 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         episodesRepository.save(deleteEpisode);
 
-        return deleteEpisode.getNovelsId();
+        return deleteEpisode;
     }
 
     @Override
@@ -150,6 +146,9 @@ public class EpisodesServiceImpl implements EpisodesService {
         });
 
         EpisodesDtoByUser episodesDtoByUser = new EpisodesDtoByUser(episodes);
+
+        episodesDtoByUser.setEmitter(emitterRepository.findById(id));
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         episodesDtoByUser.setModifiedRegistration(
             episodes.getRegistration().format(dateTimeFormatter));

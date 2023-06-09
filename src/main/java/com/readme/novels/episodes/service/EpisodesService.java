@@ -3,6 +3,7 @@ package com.readme.novels.episodes.service;
 import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
+import com.readme.novels.episodes.model.Episodes;
 import org.springframework.data.domain.Pageable;
 
 public interface EpisodesService {
@@ -10,7 +11,7 @@ public interface EpisodesService {
 
     void updateEpisodes(EpisodesDto episodesDto);
 
-    long deleteEpisodes(Long id);
+    Episodes deleteEpisodes(Long id);
 
     EpisodesDto getEpisodesById(Long id);
 

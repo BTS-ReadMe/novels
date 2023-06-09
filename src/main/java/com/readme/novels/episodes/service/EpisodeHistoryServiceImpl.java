@@ -34,16 +34,18 @@ public class EpisodeHistoryServiceImpl implements EpisodeHistoryService {
         Episodes episodes = episodesRepository.findById(id).orElseThrow(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         });
+        if (!uuid.equals("undefined")) {
+            // uuid랑 episode id로 조회
+            Optional<EpisodeHistory> episodeHistory = episodeHistoryRepository.findByUuidAndEpisodeId(
+                uuid, episodes.getId());
 
-        // uuid랑 episode id로 조회
-        Optional<EpisodeHistory> episodeHistory = episodeHistoryRepository.findByUuidAndEpisodeId(
-            uuid, episodes.getId());
-
-        if (episodeHistory.isEmpty()) {
-            EpisodeHistory newEpisodeHistory = new EpisodeHistory(uuid, episodes.getNovelsId(),
-                episodes.getId(), episodes.isFree());
-            episodeHistoryRepository.save(newEpisodeHistory);
+            if (episodeHistory.isEmpty()) {
+                EpisodeHistory newEpisodeHistory = new EpisodeHistory(uuid, episodes.getNovelsId(),
+                    episodes.getId(), episodes.isFree());
+                episodeHistoryRepository.save(newEpisodeHistory);
+            }
         }
+
     }
 
     @Override

@@ -32,13 +32,10 @@ public class AwsS3Controller {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @PostMapping("/file")
-    public ResponseEntity<String> uploadFile() {
+    public ResponseEntity<String> uploadFile(@RequestPart MultipartFile multipartFile) {
 
         log.info("사진 등록!! 컨트롤러 진입!");
-
-
-//        return ResponseEntity.ok().body(awsS3Service.uploadFile(multipartFile));
-        return null;
+        return ResponseEntity.ok().body(awsS3Service.uploadFile(multipartFile));
     }
 
 }

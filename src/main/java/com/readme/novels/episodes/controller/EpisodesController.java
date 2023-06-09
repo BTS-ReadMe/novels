@@ -7,18 +7,23 @@ import com.readme.novels.episodes.responseObject.ResponseEpisodesUser;
 import com.readme.novels.episodes.service.EpisodeHistoryService;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
+import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/v1/episodes")
@@ -28,6 +33,7 @@ public class EpisodesController {
     private final EpisodesService episodesService;
     private final EpisodesKafkaProducer episodesKafkaProducer;
     private final EpisodeHistoryService episodeHistoryService;
+    private final EmitterRepository emitterRepository;
 
     @Operation(summary = "에피소드 조회", description = "에피소드 조회, 조회할 에피소드 id url 전달", tags = {"에피소드"})
     @ApiResponses({
@@ -48,12 +54,19 @@ public class EpisodesController {
         episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsKafkaDto);
 
         // 최근 읽은 목록에 추가
-        if (!uuid.equals("")) { episodeHistoryService.addEpisodeHistory(id, uuid); }
+        if (!uuid.equals("")) {
+            episodeHistoryService.addEpisodeHistory(id, uuid);
+        }
 
         return ResponseEntity.ok(
             new CommonDataResponse<>(
                 new ResponseEpisodesUser(episodesDtoByUser)
             )
         );
+    }
+
+    @GetMapping("/getEmitter/{id}")
+    public SseEmitter getEmitter(@PathVariable Long id) {
+        return emitterRepository.findById(id);
     }
 }

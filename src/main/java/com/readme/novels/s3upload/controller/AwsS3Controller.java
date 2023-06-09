@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class AwsS3Controller {
         @ApiResponse(responseCode = "404", description = "NOT FOUND"),
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
-    @PostMapping("/file")
+    @PutMapping("/file")
     public ResponseEntity<String> uploadFile(@RequestPart MultipartFile multipartFile) {
         return ResponseEntity.ok().body(awsS3Service.uploadFile(multipartFile));
     }

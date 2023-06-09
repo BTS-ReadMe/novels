@@ -12,6 +12,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class NovelsApplication {
 
+    static {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+    }
+
     public static void main(String[] args) {
         setDefaultTimeZone();
         SpringApplication.run(NovelsApplication.class, args);

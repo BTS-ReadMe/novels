@@ -31,7 +31,7 @@ public class AwsS3Controller {
         @ApiResponse(responseCode = "404", description = "NOT FOUND"),
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
-    @PutMapping("/file")
+    @PostMapping("/file")
     public ResponseEntity<String> uploadFile(@RequestPart MultipartFile multipartFile) {
 
         log.info("사진 등록!! 컨트롤러 진입!");

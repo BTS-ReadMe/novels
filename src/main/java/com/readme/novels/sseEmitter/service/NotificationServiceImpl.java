@@ -19,6 +19,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Component
     public class GlobalCounter {
+
         private int counter;
 
         public synchronized int incrementCounter() {
@@ -28,31 +29,34 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public SseEmitter connection(Long episodeId, String uuid) {
+    public SseEmitter connection(Long episodeId, String id) {
 
-        String id = episodeId + uuid;
+        String uuid = episodeId + "_" + id;
 
-        SseEmitter emitter = emitterRepository.save(id, new SseEmitter((long) (5 * 60 * 1000)));
-
+        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (5 * 60 * 1000)));
 
         log.info("--------------------------");
-        sendToClient(emitter, id, "연결되었습니다. " + uuid);
+        sendToClient(emitter, uuid, "연결되었습니다. " + uuid);
 
         return emitter;
     }
 
     @Override
-    public void sendToClient(SseEmitter emitter, String id, Object data) {
+    public void sendToClient(SseEmitter emitter, String uuid, Object data) {
 
         try {
             emitter.send(SseEmitter.event()
-                .id(id)
+                .id(uuid)
                 .name("sse")
                 .data(data));
+
+            log.info("[send / " + uuid.split("_")[1] + "] ");
+
         } catch (IOException e) {
-            emitterRepository.deleteAllStartByWithId(id);
+            emitterRepository.deleteAllStartByWithId(uuid);
             log.info("--------------------------");
-            log.error("SSE 연결 오류 발생", e);
+            log.info("SSE 연결 오류 발생" + uuid);
+            log.info("[delete]" + uuid);
         }
     }
 }

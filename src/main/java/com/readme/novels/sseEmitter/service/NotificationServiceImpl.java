@@ -33,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         String uuid = episodeId + "_" + id;
 
-        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (60 * 60 * 1000)));
+        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (10 * 60 * 1000)));
 
         log.info("--------------------------");
         sendToClient(emitter, uuid, "[connect] id : " + id + ", episodeId : " + episodeId);

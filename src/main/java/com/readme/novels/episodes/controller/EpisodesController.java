@@ -68,13 +68,13 @@ public class EpisodesController {
     }
 
     @GetMapping(value = "/getEmitter/{episodeId}", produces = "text/event-stream")
-    public ResponseEntity<SseEmitter> getEmitter(@PathVariable("episodeId") Long episodeId, HttpServletResponse response) {
+    public SseEmitter getEmitter(@PathVariable("episodeId") Long episodeId) {
 
         String id = String.valueOf(globalCounter.incrementCounter());
 
+        log.info("--------------------------");
         log.info("[controller] id : " + id + ", episodeId : " + episodeId + "]");
 
-        return new ResponseEntity<>(notificationService.connection(episodeId, id, response),
-            HttpStatus.OK);
+        return notificationService.connection(episodeId, id);
     }
 }

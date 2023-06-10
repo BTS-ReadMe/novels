@@ -72,6 +72,8 @@ public class EpisodesController {
         @RequestHeader(value = "uuid") String uuid,
         HttpServletResponse response) {
 
+        log.info("[controller] uuid : " + uuid + ", episodeId : " + episodeId + "]");
+
         return new ResponseEntity<>(notificationService.connection(episodeId, uuid, response),
             HttpStatus.OK);
     }

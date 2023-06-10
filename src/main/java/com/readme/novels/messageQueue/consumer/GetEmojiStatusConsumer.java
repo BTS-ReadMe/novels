@@ -29,8 +29,13 @@ public class GetEmojiStatusConsumer {
         Map<String, SseEmitter> result = emitterRepository.findAllStartById(
             String.valueOf(emojiStatusDto.getEpisodeId()));
 
+        log.info("연결된 user 수 : " + result.size());
+
         for (Map.Entry<String, SseEmitter> entry : result.entrySet()) {
+            log.info("[send] " + entry.getKey());
             notificationService.sendToClient(entry.getValue(), entry.getKey(), emojiStatusDto);
         }
+
+        log.info("--------");
     }
 }

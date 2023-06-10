@@ -45,10 +45,11 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendToClient(SseEmitter emitter, String uuid, Object data) {
 
         try {
+            String formattedData = formatData(data);
             emitter.send(SseEmitter.event()
                 .id(uuid)
                 .name("sse")
-                .data(data));
+                .data(formattedData));
 
             log.info("[send] id : " + uuid.split("_")[1] + "] ");
 
@@ -60,5 +61,10 @@ public class NotificationServiceImpl implements NotificationService {
             String id = uuid.split("_")[1];
             log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
         }
+    }
+
+    private String formatData(Object data) {
+        String rawData = data.toString();
+        return "data:" + rawData.toString() + "\n\n";
     }
 }

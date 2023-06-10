@@ -8,21 +8,19 @@ import com.readme.novels.episodes.service.EpisodeHistoryService;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
+import com.readme.novels.sseEmitter.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -36,6 +34,7 @@ public class EpisodesController {
     private final EpisodesKafkaProducer episodesKafkaProducer;
     private final EpisodeHistoryService episodeHistoryService;
     private final EmitterRepository emitterRepository;
+    private final NotificationService notificationService;
 
     @Operation(summary = "에피소드 조회", description = "에피소드 조회, 조회할 에피소드 id url 전달", tags = {"에피소드"})
     @ApiResponses({
@@ -67,10 +66,15 @@ public class EpisodesController {
         );
     }
 
-    @GetMapping(value = "/getEmitter/{id}", produces = "text/event-stream")
-    public SseEmitter getEmitter(@PathVariable Long id) {
-        log.info("컨트롤러");
+    @GetMapping(value = "/getEmitter", produces = "text/event-stream")
+    public ResponseEntity<SseEmitter> getEmitter(
+        @RequestHeader(value = "episodeId") Long episodeId,
+        @RequestHeader(value = "uuid") String uuid,
+        HttpServletResponse response) {
 
-        return emitterRepository.findById(id);
+        log.info("[controller] uuid : " + uuid + ", episodeId : " + episodeId + "]");
+
+        return new ResponseEntity<>(notificationService.connection(episodeId, uuid, response),
+            HttpStatus.OK);
     }
 }

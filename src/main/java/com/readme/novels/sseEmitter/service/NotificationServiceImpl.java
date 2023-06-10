@@ -4,7 +4,6 @@ import static org.springframework.retry.policy.TimeoutRetryPolicy.DEFAULT_TIMEOU
 
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,19 +28,15 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public SseEmitter connection(Long episodeId, String uuid, HttpServletResponse response) {
+    public SseEmitter connection(Long episodeId, String uuid) {
 
         String id = episodeId + uuid;
 
-        SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+        SseEmitter emitter = emitterRepository.save(id, new SseEmitter((long) (5 * 60 * 1000)));
 
-        emitter.onCompletion(() -> emitterRepository.deleteAllStartByWithId(id));
-        emitter.onTimeout(() -> emitterRepository.deleteAllStartByWithId(id));
-        emitter.onError((e) -> emitterRepository.deleteAllStartByWithId(id));
 
         log.info("--------------------------");
         sendToClient(emitter, id, "연결되었습니다. " + uuid);
-        log.info("--------------------------");
 
         return emitter;
     }
@@ -56,6 +51,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .data(data));
         } catch (IOException e) {
             emitterRepository.deleteAllStartByWithId(id);
+            log.info("--------------------------");
             log.error("SSE 연결 오류 발생", e);
         }
     }

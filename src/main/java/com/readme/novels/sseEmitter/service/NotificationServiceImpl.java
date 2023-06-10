@@ -65,6 +65,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     private String formatData(Object data) {
         String rawData = data.toString();
-        return "data:" + rawData.toString() + "\n\n";
+        return "data: " + rawData.toString() + " \n\n";
     }
 }

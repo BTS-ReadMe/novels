@@ -67,9 +67,10 @@ public class EpisodesController {
         );
     }
 
-    @GetMapping("/getEmitter/{id}")
+    @GetMapping(value = "/getEmitter/{id}", produces = "text/event-stream")
     public SseEmitter getEmitter(@PathVariable Long id) {
         log.info("컨트롤러");
+
         return emitterRepository.findById(id);
     }
 }

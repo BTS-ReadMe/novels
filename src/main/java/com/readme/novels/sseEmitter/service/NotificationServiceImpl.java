@@ -33,10 +33,10 @@ public class NotificationServiceImpl implements NotificationService {
 
         String uuid = episodeId + "_" + id;
 
-        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (5 * 60 * 1000)));
+        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (60 * 60 * 1000)));
 
         log.info("--------------------------");
-        sendToClient(emitter, uuid, "연결되었습니다. " + uuid);
+        sendToClient(emitter, uuid, "[connect] id : " + id + ", episodeId : " + episodeId);
 
         return emitter;
     }
@@ -50,13 +50,15 @@ public class NotificationServiceImpl implements NotificationService {
                 .name("sse")
                 .data(data));
 
-            log.info("[send / " + uuid.split("_")[1] + "] ");
+            log.info("[send] id : " + uuid.split("_")[1] + "] ");
 
         } catch (IOException e) {
             emitterRepository.deleteAllStartByWithId(uuid);
             log.info("--------------------------");
-            log.info("SSE 연결 오류 발생" + uuid);
-            log.info("[delete]" + uuid);
+
+            Long episodeId = Long.valueOf(uuid.split("_")[0]);
+            String id = uuid.split("_")[1];
+            log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
         }
     }
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -16,6 +17,16 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class NotificationServiceImpl implements NotificationService {
 
     private final EmitterRepository emitterRepository;
+
+    @Component
+    public class GlobalCounter {
+        private int counter;
+
+        public synchronized int incrementCounter() {
+            counter++;
+            return counter;
+        }
+    }
 
     @Override
     public SseEmitter connection(Long episodeId, String uuid, HttpServletResponse response) {

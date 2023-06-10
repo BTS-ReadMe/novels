@@ -9,6 +9,7 @@ import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import com.readme.novels.sseEmitter.service.NotificationService;
+import com.readme.novels.sseEmitter.service.NotificationServiceImpl.GlobalCounter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,8 +34,8 @@ public class EpisodesController {
     private final EpisodesService episodesService;
     private final EpisodesKafkaProducer episodesKafkaProducer;
     private final EpisodeHistoryService episodeHistoryService;
-    private final EmitterRepository emitterRepository;
     private final NotificationService notificationService;
+    private final GlobalCounter globalCounter;
 
     @Operation(summary = "에피소드 조회", description = "에피소드 조회, 조회할 에피소드 id url 전달", tags = {"에피소드"})
     @ApiResponses({
@@ -69,8 +70,12 @@ public class EpisodesController {
     @GetMapping(value = "/getEmitter", produces = "text/event-stream")
     public ResponseEntity<SseEmitter> getEmitter(
         @RequestHeader(value = "episodeId") Long episodeId,
-        @RequestHeader(value = "uuid") String uuid,
+        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid,
         HttpServletResponse response) {
+
+        if (uuid.equals("")) {
+            uuid = String.valueOf(globalCounter.incrementCounter());
+        }
 
         log.info("[controller] uuid : " + uuid + ", episodeId : " + episodeId + "]");
 

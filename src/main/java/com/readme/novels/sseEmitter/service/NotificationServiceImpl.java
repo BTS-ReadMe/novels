@@ -39,7 +39,9 @@ public class NotificationServiceImpl implements NotificationService {
         emitter.onTimeout(() -> emitterRepository.deleteAllStartByWithId(id));
         emitter.onError((e) -> emitterRepository.deleteAllStartByWithId(id));
 
+        log.info("--------------------------");
         sendToClient(emitter, id, "연결되었습니다. " + uuid);
+        log.info("--------------------------");
 
         return emitter;
     }

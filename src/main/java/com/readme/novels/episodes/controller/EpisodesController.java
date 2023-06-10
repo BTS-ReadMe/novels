@@ -72,7 +72,9 @@ public class EpisodesController {
 
         String id = String.valueOf(globalCounter.incrementCounter());
 
+        log.info("--------------------------");
         log.info("[controller] id : " + id + ", episodeId : " + episodeId + "]");
+        log.info("--------------------------");
 
         return new ResponseEntity<>(notificationService.connection(episodeId, id, response),
             HttpStatus.OK);

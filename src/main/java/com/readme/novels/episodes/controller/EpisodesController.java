@@ -67,19 +67,14 @@ public class EpisodesController {
         );
     }
 
-    @GetMapping(value = "/getEmitter", produces = "text/event-stream")
-    public ResponseEntity<SseEmitter> getEmitter(
-        @RequestHeader(value = "episodeId") Long episodeId,
-        @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid,
-        HttpServletResponse response) {
+    @GetMapping(value = "/getEmitter/{episodeId}", produces = "text/event-stream")
+    public ResponseEntity<SseEmitter> getEmitter(@PathVariable("episodeId") Long episodeId, HttpServletResponse response) {
 
-        if (uuid.equals("")) {
-            uuid = String.valueOf(globalCounter.incrementCounter());
-        }
+        String id = String.valueOf(globalCounter.incrementCounter());
 
-        log.info("[controller] uuid : " + uuid + ", episodeId : " + episodeId + "]");
+        log.info("[controller] id : " + id + ", episodeId : " + episodeId + "]");
 
-        return new ResponseEntity<>(notificationService.connection(episodeId, uuid, response),
+        return new ResponseEntity<>(notificationService.connection(episodeId, id, response),
             HttpStatus.OK);
     }
 }

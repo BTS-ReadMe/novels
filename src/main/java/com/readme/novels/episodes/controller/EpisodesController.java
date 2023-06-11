@@ -49,22 +49,27 @@ public class EpisodesController {
         @PathVariable Long id,
         @RequestHeader(value = "uuid", required = false, defaultValue = "") String uuid) {
 
-        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(uuid, id);
+//        EpisodesDtoByUser episodesDtoByUser = episodesService.getEpisodesByUser(uuid, id);
 
         // 조회수 증가 topic 전송
-        PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto(episodesDtoByUser);
+        PlusViewsKafkaDto plusViewsKafkaDto = new PlusViewsKafkaDto();
+        plusViewsKafkaDto.setNovelId(1L);
+        plusViewsKafkaDto.setEpisodeId(1L);
+        plusViewsKafkaDto.setPlusCnt(1L);
         episodesKafkaProducer.plusViewCount("plusViewCount", plusViewsKafkaDto);
 
         // 최근 읽은 목록에 추가
-        if (!uuid.equals("")) {
-            episodeHistoryService.addEpisodeHistory(id, uuid);
-        }
+//        if (!uuid.equals("")) {
+//            episodeHistoryService.addEpisodeHistory(id, uuid);
+//        }
 
-        return ResponseEntity.ok(
-            new CommonDataResponse<>(
-                new ResponseEpisodesUser(episodesDtoByUser)
-            )
-        );
+//        return ResponseEntity.ok(
+//            new CommonDataResponse<>(
+//                new ResponseEpisodesUser(episodesDtoByUser)
+//            )
+//        );
+
+        return null;
     }
 
     @GetMapping(value = "/getEmitter/{episodeId}", produces = "text/event-stream")

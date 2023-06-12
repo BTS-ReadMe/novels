@@ -33,7 +33,14 @@ public class NotificationServiceImpl implements NotificationService {
 
         String uuid = episodeId + "_" + id;
 
-        SseEmitter emitter = emitterRepository.save(uuid, new SseEmitter((long) (10 * 60 * 1000)));
+        SseEmitter emitter = new SseEmitter((long) (10 * 60 * 1000));
+
+        emitterRepository.save(uuid, emitter);
+
+        emitter.onCompletion(() -> {
+            emitterRepository.deleteAllStartByWithId(uuid);
+            log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
+        });
 
         log.info("--------------------------");
         sendToClient(emitter, uuid, "[connect] id : " + id + ", episodeId : " + episodeId);
@@ -54,12 +61,12 @@ public class NotificationServiceImpl implements NotificationService {
             log.info("[send] id : " + uuid.split("_")[1] + "] ");
 
         } catch (IOException e) {
-            emitterRepository.deleteAllStartByWithId(uuid);
-            log.info("--------------------------");
-
-            Long episodeId = Long.valueOf(uuid.split("_")[0]);
-            String id = uuid.split("_")[1];
-            log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
+//            emitterRepository.deleteAllStartByWithId(uuid);
+//            log.info("--------------------------");
+//
+//            Long episodeId = Long.valueOf(uuid.split("_")[0]);
+//            String id = uuid.split("_")[1];
+//            log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
         }
     }
 

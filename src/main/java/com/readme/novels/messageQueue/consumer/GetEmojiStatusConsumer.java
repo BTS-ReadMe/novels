@@ -39,9 +39,9 @@ public class GetEmojiStatusConsumer {
 
             if (notificationService.sendToClient(entry.getValue(), entry.getKey(),
                 emojiStatusDto)) {
-                success.add(Long.valueOf(entry.getKey().split("_")[0]));
+                success.add(Long.valueOf(entry.getKey().split("_")[1]));
             } else {
-                fail.add(Long.valueOf(entry.getKey().split("_")[0]));
+                fail.add(Long.valueOf(entry.getKey().split("_")[1]));
             }
         }
 

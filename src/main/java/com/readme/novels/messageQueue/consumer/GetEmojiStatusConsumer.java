@@ -27,12 +27,14 @@ public class GetEmojiStatusConsumer {
         EmojiStatusDto emojiStatusDto = mapper.readValue(kafkaMessage, EmojiStatusDto.class);
 
         Map<String, SseEmitter> result = emitterRepository.findAllStartById(
-            String.valueOf(emojiStatusDto.getEpisodeId()));
+            String.valueOf(emojiStatusDto.getEpisodeId()) + "_");
 
         log.info("--------------------------");
         log.info("연결된 user 수 : " + result.size());
 
         for (Map.Entry<String, SseEmitter> entry : result.entrySet()) {
+            log.info("episodeId : " + entry.getKey().split("_")[0] + ", uuid : " + entry.getKey()
+                .split("_")[1]);
             notificationService.sendToClient(entry.getValue(), entry.getKey(), emojiStatusDto);
         }
 

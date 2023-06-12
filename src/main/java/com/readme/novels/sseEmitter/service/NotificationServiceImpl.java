@@ -1,7 +1,5 @@
 package com.readme.novels.sseEmitter.service;
 
-import static org.springframework.retry.policy.TimeoutRetryPolicy.DEFAULT_TIMEOUT;
-
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .name("sse")
                 .data(formattedData));
 
-            log.info("[send] id : " + uuid.split("_")[1] + "] ");
+            log.info("[send] id : " + uuid.split("_")[1]);
 
         } catch (IOException e) {
 //            emitterRepository.deleteAllStartByWithId(uuid);

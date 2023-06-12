@@ -5,6 +5,7 @@ import com.readme.novels.messageQueue.dto.EmojiStatusDto;
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import com.readme.novels.sseEmitter.service.NotificationService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class GetEmojiStatusConsumer {
             String.valueOf(emojiStatusDto.getEpisodeId()) + "_");
 
         log.info("--------------------------");
-        List<Long> success = null;
-        List<Long> fail = null;
+        List<Long> success = new ArrayList<>();
+        List<Long> fail = new ArrayList<>();
 
         for (Map.Entry<String, SseEmitter> entry : result.entrySet()) {
 

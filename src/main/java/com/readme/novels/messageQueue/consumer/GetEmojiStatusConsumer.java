@@ -27,7 +27,7 @@ public class GetEmojiStatusConsumer {
         EmojiStatusDto emojiStatusDto = mapper.readValue(kafkaMessage, EmojiStatusDto.class);
 
         Map<String, SseEmitter> result = emitterRepository.findAllStartById(
-            String.valueOf(emojiStatusDto.getEpisodeId()));
+            String.valueOf(emojiStatusDto.getEpisodeId()) + "_");
 
         log.info("--------------------------");
         log.info("연결된 user 수 : " + result.size());

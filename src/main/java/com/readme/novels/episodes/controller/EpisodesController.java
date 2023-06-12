@@ -73,7 +73,7 @@ public class EpisodesController {
         String id = String.valueOf(globalCounter.incrementCounter());
 
         log.info("--------------------------");
-        log.info("[get emitter] id : " + id + ", episodeId : " + episodeId + "]");
+        log.info("[get emitter] id : " + id + ", episodeId : " + episodeId);
 
         return notificationService.connection(episodeId, id);
     }

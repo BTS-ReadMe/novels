@@ -5,6 +5,7 @@ import com.readme.novels.messageQueue.dto.EmojiStatusDto;
 import com.readme.novels.sseEmitter.repository.EmitterRepository;
 import com.readme.novels.sseEmitter.service.NotificationService;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +31,20 @@ public class GetEmojiStatusConsumer {
             String.valueOf(emojiStatusDto.getEpisodeId()) + "_");
 
         log.info("--------------------------");
-        log.info("연결된 user 수 : " + result.size());
+        List<Long> success = null;
+        List<Long> fail = null;
 
         for (Map.Entry<String, SseEmitter> entry : result.entrySet()) {
-            log.info("episodeId : " + entry.getKey().split("_")[0] + ", uuid : " + entry.getKey()
-                .split("_")[1]);
-            notificationService.sendToClient(entry.getValue(), entry.getKey(), emojiStatusDto);
+
+            if (notificationService.sendToClient(entry.getValue(), entry.getKey(),
+                emojiStatusDto)) {
+                success.add(Long.valueOf(entry.getKey().split("_")[0]));
+            } else {
+                fail.add(Long.valueOf(entry.getKey().split("_")[0]));
+            }
         }
 
+        log.info("success : {}", success);
+        log.info("fail : {}", fail);
     }
 }

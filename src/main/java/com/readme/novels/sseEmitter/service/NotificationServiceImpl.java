@@ -41,13 +41,14 @@ public class NotificationServiceImpl implements NotificationService {
         });
 
         log.info("--------------------------");
+        log.info("[connect] id : " + id + ", episodeId : " + episodeId);
         sendToClient(emitter, uuid, "[connect] id : " + id + ", episodeId : " + episodeId);
 
         return emitter;
     }
 
     @Override
-    public void sendToClient(SseEmitter emitter, String uuid, Object data) {
+    public Boolean sendToClient(SseEmitter emitter, String uuid, Object data) {
 
         try {
             String formattedData = formatData(data);
@@ -56,15 +57,10 @@ public class NotificationServiceImpl implements NotificationService {
                 .name("sse")
                 .data(formattedData));
 
-            log.info("[send] id : " + uuid.split("_")[1]);
+            return true;
 
         } catch (IOException e) {
-//            emitterRepository.deleteAllStartByWithId(uuid);
-//            log.info("--------------------------");
-//
-//            Long episodeId = Long.valueOf(uuid.split("_")[0]);
-//            String id = uuid.split("_")[1];
-//            log.info("[disconnect] id : " + id + ", episodeId : " + episodeId);
+            return false;
         }
     }
 

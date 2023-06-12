@@ -6,5 +6,5 @@ public interface NotificationService {
 
     public SseEmitter connection(Long episodeId, String uuid);
 
-    public void sendToClient(SseEmitter emitter, String id, Object data);
+    public Boolean sendToClient(SseEmitter emitter, String id, Object data);
 }

@@ -7,6 +7,7 @@ import com.readme.novels.episodes.model.Episodes;
 import com.readme.novels.episodes.repository.EpisodeHistoryRepository;
 import com.readme.novels.episodes.repository.EpisodesRepository;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesPagination.Pagination;
+import com.readme.novels.episodes.responseObject.ResponseFirstEpisode;
 import com.readme.novels.novels.model.Novels;
 import com.readme.novels.novels.repository.INovelsRepository;
 import java.time.format.DateTimeFormatter;
@@ -225,6 +226,16 @@ public class EpisodesServiceImpl implements EpisodesService {
 
         episodesRepository.save(updateEpisodes);
 
+    }
+
+    @Override
+    public ResponseFirstEpisode findFirstEpisode(Long novelId) {
+        Episodes episodes = episodesRepository.findFirstByNovelsIdOrderByRegistrationAsc(novelId).orElseThrow(() -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        });
+
+
+        return new ResponseFirstEpisode(episodes.getId());
     }
 
 }

@@ -4,6 +4,7 @@ import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.PlusViewsKafkaDto;
 import com.readme.novels.episodes.messagequeue.EpisodesKafkaProducer;
 import com.readme.novels.episodes.responseObject.ResponseEpisodesUser;
+import com.readme.novels.episodes.responseObject.ResponseFirstEpisode;
 import com.readme.novels.episodes.service.EpisodeHistoryService;
 import com.readme.novels.episodes.service.EpisodesService;
 import com.readme.novels.commonResponseObject.CommonDataResponse;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.ocsp.ResponseData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,5 +78,15 @@ public class EpisodesController {
         log.info("[get emitter] id : " + id + ", episodeId : " + episodeId);
 
         return notificationService.connection(episodeId, id);
+    }
+
+    @GetMapping("/getFirst/{novelId}")
+    public ResponseEntity<CommonDataResponse<ResponseFirstEpisode>> getFirstEpisode(@PathVariable Long novelId) {
+
+        ResponseFirstEpisode responseFirstEpisode = episodesService.findFirstEpisode(novelId);
+
+        return ResponseEntity.ok(new CommonDataResponse<>(responseFirstEpisode));
+
+
     }
 }

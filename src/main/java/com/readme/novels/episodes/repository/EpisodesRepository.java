@@ -14,4 +14,6 @@ public interface EpisodesRepository extends JpaRepository<Episodes, Long> {
     Optional<Episodes> findFirstByNovelsIdAndRegistrationGreaterThanOrderByRegistrationAsc(Long novelId, LocalDateTime registration);
 
     Optional<Episodes> findFirstByNovelsIdAndRegistrationLessThanOrderByRegistrationDesc(Long novelId, LocalDateTime registration);
+
+    Optional<Episodes> findFirstByNovelsIdOrderByRegistrationAsc(Long novelId);
 }

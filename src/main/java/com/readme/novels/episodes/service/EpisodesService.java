@@ -4,6 +4,7 @@ import com.readme.novels.episodes.dto.EpisodesDto;
 import com.readme.novels.episodes.dto.EpisodesDtoByUser;
 import com.readme.novels.episodes.dto.EpisodesPageDto;
 import com.readme.novels.episodes.model.Episodes;
+import com.readme.novels.episodes.responseObject.ResponseFirstEpisode;
 import org.springframework.data.domain.Pageable;
 
 public interface EpisodesService {
@@ -21,4 +22,5 @@ public interface EpisodesService {
 
     void plusViewsCount(Long id, Integer plusCount);
 
+    ResponseFirstEpisode findFirstEpisode(Long novelId);
 }

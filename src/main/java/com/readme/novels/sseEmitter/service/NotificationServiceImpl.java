@@ -64,6 +64,19 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
+    @Override
+    public void sendToClientOnline(SseEmitter emitter, String uuid, int online) {
+
+        try {
+            String formattedData = formatData(online);
+            emitter.send(SseEmitter.event()
+                .id(uuid)
+                .name("online")
+                .data(formattedData));
+        } catch (IOException e) {
+        }
+    }
+
     private String formatData(Object data) {
         String rawData = data.toString();
         return "data: " + rawData.toString() + " \n\n";

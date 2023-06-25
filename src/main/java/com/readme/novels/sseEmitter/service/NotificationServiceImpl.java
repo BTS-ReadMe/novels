@@ -69,8 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
         try {
             emitter.send(SseEmitter.event()
                 .id(uuid)
-                .name("checkStatus")
-                .data(null));
+                .name("checkStatus"));
             return true;
 
         } catch (IOException e) {

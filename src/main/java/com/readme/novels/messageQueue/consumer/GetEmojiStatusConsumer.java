@@ -29,7 +29,7 @@ public class GetEmojiStatusConsumer {
         EmojiStatusDto emojiStatusDto = mapper.readValue(kafkaMessage, EmojiStatusDto.class);
 
         Map<String, SseEmitter> result = emitterRepository.findAllStartById(
-            String.valueOf(emojiStatusDto.getEpisodeId()) + "_");
+            emojiStatusDto.getEpisodeId() + "_");
 
         log.info("--------------------------");
         List<Long> success = new ArrayList<>();

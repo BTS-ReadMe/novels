@@ -34,12 +34,16 @@ public class GetEmojiStatusConsumer {
         log.info("--------------------------");
         List<Long> success = new ArrayList<>();
         List<Long> fail = new ArrayList<>();
+        List<SseEmitter> emitters = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
 
         for (Map.Entry<String, SseEmitter> entry : result.entrySet()) {
 
             if (notificationService.sendToClient(entry.getValue(), entry.getKey(),
                 emojiStatusDto)) {
                 success.add(Long.valueOf(entry.getKey().split("_")[1]));
+                emitters.add(entry.getValue());
+                ids.add(entry.getKey());
             } else {
                 fail.add(Long.valueOf(entry.getKey().split("_")[1]));
             }
@@ -47,5 +51,9 @@ public class GetEmojiStatusConsumer {
 
         log.info("success : {}", success);
         log.info("fail : {}", fail);
+
+        for (int i = 0; i < success.size(); i++) {
+            notificationService.sendToClientOnline(emitters.get(i),ids.get(i),success.size());
+        }
     }
 }

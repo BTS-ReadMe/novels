@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class GetEmojiStatusConsumer {
     private final EmitterRepository emitterRepository;
     private final NotificationService notificationService;
 
+    @Transactional
     @KafkaListener(id = "emojiStatus", topics = "emojiStatus")
     public void listen(String kafkaMessage) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

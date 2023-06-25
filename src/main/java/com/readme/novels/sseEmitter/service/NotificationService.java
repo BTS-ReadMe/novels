@@ -8,5 +8,5 @@ public interface NotificationService {
 
     public Boolean sendToClient(SseEmitter emitter, String id, Object data);
 
-    public void sendToClientOnline(SseEmitter emitter, String id, int online);
+    public Boolean checkStatus(SseEmitter emitter, String id);
 }

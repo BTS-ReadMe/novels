@@ -65,15 +65,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendToClientOnline(SseEmitter emitter, String uuid, int online) {
-
+    public Boolean checkStatus(SseEmitter emitter, String uuid) {
         try {
-            String formattedData = formatData(online);
             emitter.send(SseEmitter.event()
                 .id(uuid)
-                .name("online")
-                .data(formattedData));
+                .name("checkStatus")
+                .data(null));
+            return true;
+
         } catch (IOException e) {
+            return false;
         }
     }
 
